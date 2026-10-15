@@ -1,0 +1,46 @@
+## Project-scoped ignore rules
+# TeX-related rules moved to `math/.gitignore` so they only apply
+# to the LaTeX project under `math/`.
+
+## OS / Editor junk files
+# Editor backup/lock files
+*~
+*.bak
+*.orig
+\#*\#
+.#*
+*.swp
+*.swo
+*.swm
+.*.swp
+.*.swo
+.*.swm
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+System Volume Information/
+~$*
+
+## Office documents
+
+
+# Linux / KDE
+.directory
+.Trash-*
+.nfs*
+
+## IDE settings
+.vscode/

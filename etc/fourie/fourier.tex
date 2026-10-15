@@ -1,0 +1,160 @@
+% !TeX program = lualatex
+% 原本: 0064_260928073535_001.pdf（全4ページ、印刷ページ番号2--5）
+\documentclass[a4paper,10pt]{article}
+\usepackage{luatexja}
+\usepackage[haranoaji]{luatexja-preset}
+\usepackage{amsmath,amssymb}
+\usepackage[left=28mm,right=17mm,top=42mm,bottom=28mm,footskip=13mm]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\titleformat{\section}{\large\sffamily}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\abovedisplayskip}{9pt}
+\setlength{\belowdisplayskip}{9pt}
+\setlength{\abovedisplayshortskip}{5pt}
+\setlength{\belowdisplayshortskip}{7pt}
+\renewcommand{\baselinestretch}{1.42}
+\newenvironment{questions}{\begin{list}{}{\setlength{\leftmargin}{3em}\setlength{\labelwidth}{2.8em}\setlength{\labelsep}{.2em}\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{10pt}}}{\end{list}}
+\newcommand{\q}[1]{\item[{\makebox[2.8em][l]{Q#1}}]}
+\begin{document}
+\setcounter{page}{2}
+\begin{center}{\LARGE\sffamily フーリエ変換について}\end{center}
+\vspace{9pt}
+\section{フーリエ級数展開}
+有限区間内の関数（または周期関数）を，正弦波関数の重ね合わせとして捉えるのがフーリエ級数展開である．フーリエの考え方は次のとおりである：
+\begin{quote}
+「区分的に連続な関数 $f(t)$ が区間幅 $T$ の有限区間内で定義されているとき，$f(t)$ は $T$ の周期を持つ正弦関数の重ね合わせで表される．」
+\end{quote}
+\noindent この定理によると，関数 $f(t)$ は，$\omega_0=2\pi/T$ を基本振動の角周波数として，
+\begin{equation}
+f(t)=\frac{b_0}{2}+\sum_{n=1}^{\infty}\{b_n\cos(n\omega_0t)+a_n\sin(n\omega_0t)\}
+\end{equation}
+\noindent のように級数展開される．ここで，$b_0/2$ は一定値であり，それを除いた各項が振動する成分を表している．
+
+(1) の右辺は周期 $T$ を持つ関数の線形結合になっている．よって，$f(t)$ が周期 $T$ の周期関数の場合でもこのような級数展開が可能であると言える．
+
+以下では，関数 $f(t)$ を実数関数とする．実際多くの場合，測定量は実数であろう．その場合，フーリエ係数 $a_n,b_n$ はともに実数となる．
+\begin{questions}
+\q{1} (1) 式中の基本振動を表す項を書き出せ．また，5 倍振動を表す項を書き出せ．
+\q{2} (1) 式中の振動項の時間平均はいくらか．また，$b_0/2$ の値の意味を答えよ．
+\q{3} (1) 式に含まれる $n$ 倍振動項の振幅を求めよ．また，その振動を $\cos(n\omega_0t)$ と比較したときの位相のズレを求めよ．
+\end{questions}
+(1) 式は $\cos$ 関数と $\sin$ 関数の重ね合わせで書いてあるが，Euler の公式：
+\begin{equation}
+\exp(\pm i\theta)=\cos\theta\pm i\sin\theta
+\end{equation}
+\noindent を用いて，次のような形式に書き換えることができる：
+\begin{equation}
+f(t)=\sum_{n=-\infty}^{\infty}c_n\exp(in\omega_0t)
+\end{equation}
+\begin{questions}
+\q{4} (1) から (3) に書き換える場合，係数 $c_n$ はどのように決められるか．$a_n,b_n$ との関係式を答えよ．
+\q{5} (3) 式の中で，3 倍振動を表す項を書き出せ．
+\q{6} $c_n$ と $c_{-n}$ の関係を答えよ．ただし，$f(t)$ は実関数とする．
+\q{7} $n$ 倍振動項 $(n>0)$ について考える．複素数 $c_n$ を極形式で，
+\[
+c_n=|c_n|\exp(i\delta_n)
+\]
+のように書いたとする．絶対値 $|c_n|$ と偏角 $\delta_n$ は，何を表しているか．（Q3 と比較せよ．）
+\end{questions}
+\newpage
+関数 $f(t)$ が与えられたとき，フーリエ級数の係数 $c_n$ がどのように決定されるかを考えてみる．そのために，次の積分公式を使う．$n,m$ を整数として，次式が成り立つ．
+\begin{equation}
+\int_{\tau}^{\tau+T}\exp\{i(n-m)\omega_0t\}dt=
+\begin{cases}0&(n\ne m)\\T&(n=m)\end{cases}
+\end{equation}
+もし係数 $c_m$ を求めたいなら，(3) 式両辺に $\exp(-im\omega_0t)$ をかけて，区間 $[\tau,\tau+T]$ で積分する．そのとき，(4) 式から，右辺で消えずに残るのは，係数 $c_m$ のついた項ただ 1 項のみである．つまり，
+\begin{align}
+\int_{\tau}^{\tau+T}f(t)\exp(-im\omega_0t)dt&=c_mT\notag\\
+c_m&=\frac{1}{T}\int_{\tau}^{\tau+T}f(t)\exp(-im\omega_0t)dt
+\end{align}
+\noindent となる．(5) 式がフーリエ係数を決めるための式である．
+\begin{questions}
+\q{8} (4) 式が成り立つことを確かめよ．
+\q{9} (5) 式が成り立つことを確かめよ．
+\end{questions}
+\section{フーリエ級数からフーリエ変換へ}
+フーリエ級数展開で扱う関数は，有限区間内で定義された関数であった．さらに，考える区間を実数全体に拡張することによって「フーリエ変換」に移行する．
+
+あらかじめ考える有限区間を，$[-T/2,T/2]$ とする．(5) 式右辺の $1/T$ を除いた定積分の部分を $X_m$ とおくことにすると，
+% 原文の本文は X_m、次式は X_n。原本どおり保持。
+\begin{equation}
+X_n=\int_{-T/2}^{T/2}f(t)\exp(-in\omega_0t)dt
+\end{equation}
+\noindent これより，フーリエ展開式 (3) は次のように書き換えられる．
+\begin{equation}
+f(t)=\frac{1}{T}\sum_{n=-\infty}^{\infty}X_n\exp(in\omega_0t)
+\end{equation}
+\noindent (7) 式は等間隔に並ぶ角周波数，
+\begin{align}
+\omega&=n\omega_0\quad(n:\text{integer})\notag\\
+&=0,\pm\omega_0,\pm2\omega_0,\pm3\omega_0,\cdots
+\end{align}
+\noindent についての無限級数の形をしている．角周波数の間隔は
+\begin{equation}
+\Delta\omega=\omega_0=\frac{2\pi}{T}
+\end{equation}
+\noindent である．
+\newpage
+ここで，$T\to\infty$ の極限を考えてみよう．この極限で，(6)(7) がどのように変更されるべきかを考えるのである．$T\to\infty$ のとき $\Delta\omega\to0$ だから，(8) の角周波数どうしの間隔は 0 に向かう．だからこの極限では，$\omega$ の値としては全実数値が許されることになる．つまり，$\omega$ は連続変数になると考えて良いだろう．
+
+(6) 式の極限値は連続変数 $\omega$ に応じて決まるので，それを $X(\omega)$ と書くと，
+\begin{equation}
+X(\omega)=\int_{-\infty}^{\infty}f(t)\exp(-i\omega t)dt
+\end{equation}
+\noindent である．この (10) 式によって，関数 $f(t)$ からその関数のフーリエ成分 $X(\omega)$ を求めることを「$f(t)$ をフーリエ変換する」という．
+
+一方，(7) 式の級数は，$T\to\infty$ の極限では「$\omega$ の全実数値についての和」，つまり定積分で表されることになる．(7) 式は，
+\begin{equation}
+f(t)=\frac{1}{2\pi}\sum_{n=-\infty}^{\infty}X_n\exp(in\omega_0t)\Delta\omega
+\end{equation}
+\noindent のように書き換えられるが，ここで $T\to\infty$ の極限を考えると，
+\begin{equation}
+f(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}X(\omega)\exp(i\omega t)d\omega
+\end{equation}
+\noindent のようになると考えられる．(12) にしたがって $X(\omega)$ から $f(t)$ を求めることを，「逆フーリエ変換」という．
+\begin{questions}
+\q{10} フーリエ成分 $X(\omega)$ は何を意味しているのだろうか．
+\end{questions}
+\section{フーリエ変換の実際問題への適用：DFT}
+フーリエ変換とはいっても，実際問題においては $f(t)$ の測定時間を有限で切ってしまうから，その有限時間内の波形のフーリエ級数展開と言うべきであろう．また，$f(t)$ の測定結果を計算機に取りこむ場合，扱うのは離散的な信号列となる．これらを考慮して，フーリエ変換式 (10) を書き換えてみることにする．そのような変換を，離散フーリエ変換（Discrete Fourier Transform：DFT）と呼んでいる．
+
+$f(t)$ の測定を，時刻 $t=0$ からはじめて時間間隔 $\Delta t$ ごとに行ったとする．サンプリングしたデータの総数は $N$ 個とする．(10) 式の積分を，$t=0$ から $\Delta t$ ごとの和に書き換えると，次のようになる．
+\begin{align}
+X(\omega)&=\sum_{k=0}^{N-1}f(k\Delta t)\exp(-i\omega k\Delta t)\Delta t\notag\\
+&=\sum_{k=0}^{N-1}x_k\exp(-i\omega k\Delta t)\Delta t
+\end{align}
+\noindent ここで，$k$ 番目の測定値 $f(k\Delta t)$ を $x_k$ と置き換えた．
+
+$\omega$ の値に応じて (13) 式よりフーリエ成分 $X(\omega)$ が計算される．ただし，測定時間が有限値 $N\Delta t$ であるから，角周波数 $\omega$ としては以下の値のみ考えればよい．
+\[
+\omega=l\Delta\omega\quad(l:\text{integer})
+\]
+\newpage
+\begin{equation}
+\hphantom{\omega}\ =0,\pm\Delta\omega,\pm2\Delta\omega,\pm3\Delta\omega,\cdots
+\end{equation}
+\noindent これらの角周波数の間隔 $\Delta\omega$ は，
+\begin{equation}
+\Delta\omega=\frac{2\pi}{N\Delta t}
+\end{equation}
+\noindent である．各々の角周波数に応じたフーリエ成分 $X(\omega)=X(l\Delta\omega)$ は，$l$ で指定されるので，簡単に $X_l$ と書くことにすると，(13) 式と (15) 式より，
+\begin{align}
+X_l&=\sum_{k=0}^{N-1}x_k\exp(-il\Delta\omega k\Delta t)\Delta t\notag\\
+&=\sum_{k=0}^{N-1}x_k\exp(-ilk\frac{2\pi}{N})\Delta t\notag\\
+&=\sum_{k=0}^{N-1}x_k(W_N)^{kl}\Delta t
+\end{align}
+\noindent ただし，ここで $W_N=\exp(-i\dfrac{2\pi}{N})$ とした．(16) 式が DFT の表式である．$l$ は任意の整数となっているが，実際はデータが離散的なため，$l$ としては連続する $N$ 個のみ考えれば充分であることが確認できる（Q11,Q12）．つまり，(16) で計算すべきフーリエ成分としては，例えば，
+\begin{equation}
+X_0,X_1,X_2,\cdots,X_{N-1}
+\end{equation}
+\noindent のみを考えればよいのである．
+\begin{questions}
+\q{11} (16) 式から，$X_l=X_{l+N}$ を示せ．
+\q{12} $X_l=X_{l+N}$ ということは，フーリエ成分 $X_l$ と $X_{l+N}$ とが区別できないことを示している．これは，扱うデータが離散的だからである．この事情を図を用いて説明せよ．
+\q{13} $X_{N-2}$ と $X_2$ の間にはどんな関係があるか．
+\q{14} フーリエ成分 $\{X_l\}$ から，元の信号列 $\{x_k\}$ を再現するための式を作れ．（DFT の逆変換）
+\end{questions}
+\end{document}

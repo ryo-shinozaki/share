@@ -1,0 +1,305 @@
+% !TeX program = lualatex
+% fourier.tex 第3節の補助教材。ビルド: lualatex fourier3.tex（2回）
+\documentclass[a4paper,11pt]{article}
+\usepackage{luatexja}
+\usepackage[haranoaji]{luatexja-preset}
+\usepackage{amsmath,amssymb,booktabs,array}
+\usepackage[margin=22mm,top=20mm,bottom=21mm]{geometry}
+\usepackage{xcolor,tikz,pgfplots}
+\usepackage{enumitem,fancyhdr}
+\usepackage[unicode,hidelinks]{hyperref}
+\pgfplotsset{compat=1.18}
+\definecolor{main}{HTML}{165678}
+\definecolor{accent}{HTML}{B04A27}
+\definecolor{pale}{HTML}{EEF5F8}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{5pt}
+\renewcommand{\baselinestretch}{1.16}
+\setlist{nosep,leftmargin=2em}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small フーリエ変換の実際問題への適用：DFT}
+\fancyhead[R]{\small 高専生向け補助教材}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{16pt}
+\newcommand{\heading}[2]{\vspace*{2mm}{\Large\bfseries\color{main}#1\quad #2}\par\vspace{3mm}}
+\newcommand{\sub}[1]{\par\vspace{2mm}{\bfseries\color{main}#1}\par}
+\newcommand{\point}[1]{\par\smallskip\noindent\colorbox{pale}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\strut #1\strut}}\par\smallskip}
+\newcommand{\ii}{\mathrm{i}}
+\begin{document}
+\heading{1}{測定した波を「周波数ごとの成分」に分ける}
+\noindent 本資料は \texttt{fourier.tex} 第3節「フーリエ変換の実際問題への適用：DFT」を，具体例から学ぶための補助教材です。三角関数と複素数の基礎を前提に，式の意味を順に説明します。
+
+\sub{何の役に立つのか}
+モータの振動をセンサで測ると，いくつもの振動が重なった波形が得られます。時間波形だけでは見分けにくくても，周波数ごとに分けると「50 Hz の振動が強い」などと分かります。\textbf{DFT（離散フーリエ変換）は，測定した数値の列から，どの周波数の成分がどれだけ含まれるかを調べる計算}です。Hz（ヘルツ）は「1秒間に何回振動するか」を表します。
+
+\sub{連続した波から，有限個の数値へ}
+実際の計算機は，すべての時刻の値を扱えません。一定の時間間隔 $\Delta t$ で値を取り出すことを\textbf{サンプリング}といい，取り出した値を
+\[
+ x_k=f(k\Delta t),\qquad k=0,1,\ldots,N-1
+\]
+と書きます。$k$ は測定値の番号，$N$ はデータの個数です。
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=13cm,height=4.5cm,xmin=0,xmax=1.02,ymin=-1.3,ymax=1.4,
+ xlabel={時刻 $t$ [s]},ylabel={測定値},xtick={0,0.125,0.5,0.875,1},
+ xticklabels={$0$,$\Delta t$,$4\Delta t$,$7\Delta t$,$T$},ytick={-1,0,1},grid=major]
+\addplot[main,thick,domain=0:1,samples=150]{cos(360*x)};
+\addplot[accent,ycomb,thick,mark=*,samples at={0,0.125,0.25,0.375,0.5,0.625,0.75,0.875}]{cos(360*x)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\noindent 図では $\Delta t=0.125$ s，$N=8$。青線が連続した波，赤い点が計算機に入る値です。$t=T$ の点は，この8個には含めません。
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+量 & 定義 & 図の例\\\midrule
+サンプリング周波数 & $f_s=1/\Delta t$ & $8$ Hz\\
+DFTで使う区間の長さ & $T=N\Delta t$ & $1$ s\\
+周波数の刻み & $\Delta f=1/T=f_s/N$ & $1$ Hz\\\bottomrule
+\end{tabular}
+\end{center}
+\point{最初と最後の測定点の時間差は $(N-1)\Delta t$ です。一方，DFTは $N$ 個分の時間幅 $T=N\Delta t$ を1周期として扱います。この2つを区別しましょう。}
+
+\newpage
+\heading{2}{積分が足し算に変わると，DFTになる}
+\sub{まず，元資料のフーリエ変換を読む}
+元資料の式(10)は次の形です。$\ii^2=-1$ とします。
+\[
+ X(\omega)=\int_{-\infty}^{\infty} f(t)e^{-\ii\omega t}\,dt,
+ \qquad \omega=2\pi f.
+\]
+周波数 $f$ の単位は Hz，角周波数 $\omega$ の単位は rad/s です。$f(t)$ は時間波形を表す関数名であり，周波数の $f$ とは文脈で区別します。
+Eulerの公式を使うと $e^{-\ii\omega t}=\cos(\omega t)-\ii\sin(\omega t)$。つまり，\textbf{測定した波と，調べたい周波数の $\cos$ 波・$\sin$ 波を掛けて足し合わせる}計算です。周波数が合う成分は残り，異なる成分は正負で打ち消し合います。
+
+\sub{ステップ1：測定区間を限り，面積を長方形で近似する}
+$0\leq t<T$ だけを観測し，積分を「高さ $\times$ 幅」の和で近似します。
+\[
+ \int_0^T f(t)e^{-\ii\omega t}\,dt
+ \ \approx\ \Delta t\sum_{k=0}^{N-1}x_k e^{-\ii\omega k\Delta t}.
+\]
+元の無限区間の積分と同じとは限りません。\textbf{有限時間で切り取ることと，離散化すること}が加わっています。元資料の式(13)は，この和で計算する量を表しています。
+
+\sub{ステップ2：区間 $T$ に整数回の波が入る周波数を選ぶ}
+DFTでは，区間 $T$ に $l$ 回の振動が入る周波数を選びます。
+\[
+ f_l=\frac{l}{T},\qquad \omega_l=\frac{2\pi l}{T},\qquad
+ \omega_l k\Delta t=\frac{2\pi lk}{N}.
+\]
+\point{\textbf{元資料と同じ定義のDFT（式(16)）}\[
+ X_l=\Delta t\sum_{k=0}^{N-1}x_k e^{-\ii 2\pi lk/N},\qquad l=0,1,\ldots,N-1.
+\]
+$k$ は「時刻の番号」，$l$ は「周波数の番号」です。}
+この周波数の格子を\textbf{ビン}といいます。格子以外の周波数で和を計算することもできますが，DFTはこの $N$ 個を使い，元の $N$ 個の値を復元できるようにした変換です。
+
+\sub{FFTの出力と比べるときの注意}
+多くのソフトウェアの標準的な前向きDFTは，$\Delta t$ を付けずに
+\[
+ F_l=\sum_{k=0}^{N-1}x_k e^{-\ii2\pi lk/N}
+ \quad\text{と定義するので，}\quad \boxed{X_l=\Delta t F_l}
+\]
+です。FFT（高速フーリエ変換）は\textbf{DFTを速く計算する手順}です。別の種類のスペクトルではありません。正規化の設定はソフトごとに確認します。$x_k$ の単位が V なら，$F_l$ は V，$X_l$ は V$\cdot$s になります。
+
+\newpage
+\heading{3}{4個のデータなら，手計算で確かめられる}
+\noindent $\Delta t=0.25$ s，$N=4$ とし，次の電圧を測ったとします。
+\begin{center}
+\begin{tabular}{c|rrrr}
+\toprule
+番号 $k$ & 0 & 1 & 2 & 3\\
+時刻 $k\Delta t$ [s] & 0 & 0.25 & 0.50 & 0.75\\
+測定値 $x_k$ [V] & 1 & 0 & $-1$ & 0\\\bottomrule
+\end{tabular}
+\end{center}
+これは $f(t)=\cos(2\pi t)$ をサンプリングした値です。$f_s=4$ Hz，$T=1$ s，$\Delta f=1$ Hz なので，1 Hzの成分が見つかるはずです。
+
+\sub{掛ける数は，$1,-\ii,-1,\ii$ の繰り返し}
+$W_4=e^{-\ii2\pi/4}=-\ii$ なので，$F_l=\sum_{k=0}^3 x_k W_4^{kl}$ を計算します。
+\begin{center}
+\begin{tabular}{c|rrrr|l}
+\toprule
+ & \multicolumn{4}{c|}{各時刻の値に掛ける数 $W_4^{kl}$} & \\
+$l$ & $k=0$ & $k=1$ & $k=2$ & $k=3$ & 掛けて足した結果 $F_l$\\\midrule
+0 & 1 & 1 & 1 & 1 & $1+0-1+0=0$\\
+1 & 1 & $-\ii$ & $-1$ & $\ii$ & $1+0+1+0=2$\\
+2 & 1 & $-1$ & 1 & $-1$ & $1+0-1+0=0$\\
+3 & 1 & $\ii$ & $-1$ & $-\ii$ & $1+0+1+0=2$\\\bottomrule
+\end{tabular}
+\end{center}
+したがって，元資料の定義では
+\[
+ (X_0,X_1,X_2,X_3)=\Delta t(F_0,F_1,F_2,F_3)
+ =(0,\,0.5,\,0,\,0.5)\ \mathrm{V\cdot s}.
+\]
+
+\sub{なぜ，1 Hzの波なのに2か所に成分が出るのか}
+実数の $\cos$ 波は，複素数では正と負の周波数の対で表されます。
+\[
+ \cos(2\pi t)=\frac{1}{2}e^{\ii2\pi t}+\frac{1}{2}e^{-\ii2\pi t}.
+\]
+この例で $l=3$ は，表示上の $3$ Hzを $3-4=-1$ Hz と読み替えた位置です。独立した3 Hzの振動がある，という意味ではありません。
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=11cm,height=4cm,xmin=-2.3,xmax=2.3,ymin=0,ymax=0.7,
+ xlabel={符号付き周波数 [Hz]},ylabel={$|X_l|$ [V$\cdot$s]},xtick={-2,-1,0,1,2},ytick={0,0.5},grid=major]
+\addplot[main,ycomb,very thick,mark=*] coordinates {(-2,0) (-1,0.5) (0,0) (1,0.5)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\point{正負の対を合わせた元の波の振幅は $2|X_1|/T=1$ V。\textbf{$|X_l|$ そのものが，元の波の振幅とは限りません。}}
+
+\newpage
+\heading{4}{実例：振動の強さをスペクトルから読む}
+\noindent 振動センサの出力電圧が，次の信号になっているとします。
+\[
+ f(t)=1+2\cos(2\pi\cdot50t)+0.5\sin(2\pi\cdot120t)\quad[\mathrm{V}].
+\]
+平均値が1 V，50 Hzの振幅が2 V，120 Hzの振幅が0.5 Vの信号です。
+$\Delta t=0.001$ s，$N=1000$ とすると，
+\[
+ f_s=1000\ \mathrm{Hz},\quad T=1\ \mathrm{s},\quad \Delta f=1\ \mathrm{Hz}.
+\]
+したがって，50 Hzは $l=50$，120 Hzは $l=120$ に対応します。
+
+\sub{正の周波数だけを表示する「片側振幅スペクトル」}
+実数データで $N$ が偶数の場合，次のように計算します。
+\[
+ A_l=
+ \begin{cases}
+ |X_0|/T=|F_0|/N,&l=0,\\
+ 2|X_l|/T=2|F_l|/N,&1\leq l<N/2,\\
+ |X_{N/2}|/T=|F_{N/2}|/N,&l=N/2.
+ \end{cases}
+\]
+正負に分かれた成分をまとめるため，途中のビンは2倍します。0 Hz（直流成分）と $f_s/2$ は対が別々に存在しないため，2倍しません。\textbf{符号を含む平均値}は $X_0/T=F_0/N$ であり，絶対値を取ると符号は失われます。
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=13cm,height=4.6cm,xmin=-8,xmax=160,ymin=0,ymax=2.4,
+ xlabel={周波数 [Hz]},ylabel={片側振幅 [V]},xtick={0,50,120,150},ytick={0,0.5,1,2},grid=major]
+\addplot[main,very thick,ycomb,mark=*] coordinates {(0,1) (50,2) (120,0.5)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\noindent 図は0〜160 Hzのみ表示しています。この理想例では，他のビンの値は0です。
+\begin{center}
+\begin{tabular}{ccll}
+\toprule
+$l$ & 周波数 & 元資料の $X_l$ [V$\cdot$s] & 読み取れる内容\\\midrule
+0 & 0 Hz & $1$ & 平均値1 V\\
+50 & 50 Hz & $1$ & $\cos$ 波，振幅2 V\\
+120 & 120 Hz & $-0.25\ii$ & $\sin$ 波，振幅0.5 V\\\bottomrule
+\end{tabular}
+\end{center}
+\noindent 位相も複素数に入っています。$A\cos(2\pi f_l t+\phi)$ なら，正の周波数側で $X_l=(AT/2)e^{\ii\phi}$ です。$\sin\theta=\cos(\theta-\pi/2)$ なので，120 Hz成分の位相は $-\pi/2$ になります。
+\point{この振幅の読み方は，窓を掛けず，正弦波の周波数がビンに一致する場合です。一致しない場合には，成分が周囲に広がります（7ページ参照）。}
+
+\newpage
+\heading{5}{測る速さが足りないと，違う波を取り違える}
+\sub{同じ測定値を生む2つの波（元資料 Q12）}
+1 Hzの波と5 Hzの波を，$f_s=4$ Hz，つまり $\Delta t=0.25$ s ごとに測ります。
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=14cm,height=6cm,xmin=0,xmax=1,ymin=-1.4,ymax=1.6,
+ xlabel={時刻 [s]},ylabel={測定値},xtick={0,0.25,0.5,0.75,1},ytick={-1,0,1},
+ grid=major,legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=3}]
+\addplot[main,very thick,domain=0:1,samples=201]{cos(360*x)};
+\addlegendentry{1 Hz}
+\addplot[accent,dashed,thick,domain=0:1,samples=401]{cos(1800*x)};
+\addlegendentry{5 Hz}
+\addplot[black,only marks,mark=*,mark size=2.5pt] coordinates {(0,1) (0.25,0) (0.5,-1) (0.75,0) (1,1)};
+\addlegendentry{サンプル点}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\noindent 黒い点だけを見ると，どちらの波か区別できません。式でも
+\[
+ \cos\left(2\pi\cdot5\frac{k}{4}\right)
+ =\cos\left(2\pi\cdot1\frac{k}{4}+2\pi k\right)
+ =\cos\left(2\pi\cdot1\frac{k}{4}\right)
+\]
+となります。このように別の周波数が同じデータになる現象を\textbf{エイリアシング（折り返し）}といいます。図の最後の点は，次の区間でも一致することを示すために加えています。
+
+\sub{ナイキスト周波数は $f_s/2$}
+\point{測りたい信号の最高周波数を $f_{\max}$ とすると，基本条件は\[
+ f_s>2f_{\max}.
+\]
+これは，サンプリング前の信号がその帯域内に制限されていることが前提です。}
+$f_s/2$ を\textbf{ナイキスト周波数}といいます。ちょうど $f_s/2$ の正弦波は位相によって全点が0になることもあるため，「2倍ちょうどなら安心」とは考えません。実際の測定では余裕のある $f_s$ を選び，\textbf{A/D変換前}にアナログのローパスフィルタで高周波成分を十分小さくします。
+
+\sub{周波数の細かさは，測定時間で決まる}
+\[
+ \Delta f=\frac{f_s}{N}=\frac{1}{T}.
+\]
+高い周波数を測るには $f_s$ を高くし，近い周波数を見分けるには $T$ を長くします。例えば $T=1$ sなら刻みは1 Hz，$T=5$ sなら0.2 Hzです。ただし，実際に2つの成分を見分けられるかは，窓関数やノイズ，成分の強さにも左右されます。
+
+\newpage
+\heading{6}{元資料 Q11・Q13・Q14を式で確かめる}
+\sub{Q11：なぜ $X_{l+N}=X_l$ なのか}
+DFTの定義に $l+N$ を代入します。
+\begin{align*}
+ X_{l+N}
+ &=\Delta t\sum_{k=0}^{N-1}x_k e^{-\ii2\pi(l+N)k/N}\\
+ &=\Delta t\sum_{k=0}^{N-1}x_k e^{-\ii2\pi lk/N}
+       \underbrace{e^{-\ii2\pi k}}_{=1\ (k\text{は整数})}
+ =X_l.
+\end{align*}
+周波数では $N\Delta f=f_s$ だけ離れた成分が同じになるという意味です。したがって $l=0,\ldots,N-1$ の $N$ 個を計算すれば十分です。5ページの図は，この性質を実際の波で示しています。
+
+\sub{Q13：実数の測定値なら $X_{N-2}=\overline{X_2}$}
+上線は\textbf{複素共役}（$a+\ii b$ に対して $a-\ii b$）を表します。$x_k$ が実数なら
+\[
+ X_{N-l}=\Delta t\sum_{k=0}^{N-1}x_k e^{+\ii2\pi lk/N}
+ =\overline{X_l}.
+\]
+よって $l=2$ とすれば求める関係が得られます。絶対値は同じで，位相は符号が逆です（位相は $2\pi$ の違いを同一とします）。$N$ が偶数のときの周波数の読み方は，
+\[
+ f_l=
+ \begin{cases}
+ l\Delta f,&0\leq l\leq N/2,\\
+ (l-N)\Delta f,&N/2<l<N.
+ \end{cases}
+\]
+配列の後半は負の周波数に対応します。$l=N/2$ の $+f_s/2$ と $-f_s/2$ はサンプル上で同一です。$N$ が奇数の場合は $f_s/2$ ちょうどのビンはありません。
+
+\sub{Q14：元の測定値を再現する逆DFT}
+\point{元資料の $X_l$ を使うと\[
+ x_k=\frac{1}{N\Delta t}\sum_{l=0}^{N-1}X_l e^{+\ii2\pi lk/N}.
+\]
+$\Delta t$ を含まない $F_l$ なら，前の係数は $1/N$ です。}
+なぜ元に戻るのかを確かめましょう。右辺に $X_l$ の定義を入れ，測定値の番号を $m$ とすると，
+\[
+ \frac{1}{N}\sum_{m=0}^{N-1}x_m
+ \underbrace{\sum_{l=0}^{N-1}e^{\ii2\pi l(k-m)/N}}_{
+ \displaystyle N\ (k=m),\quad 0\ (k\ne m)}=x_k.
+\]
+$k\ne m$ では複素平面上の回転した矢印が打ち消し合います。等比数列の和でも，公比を $r=e^{\ii2\pi(k-m)/N}$ として $(1-r^N)/(1-r)=0$ と確認できます。
+\noindent\textbf{復元できるのは，元の $N$ 個のサンプル値です。}その間の連続波形を一意に決めるには，帯域の制限などの条件が必要です。
+
+\newpage
+\heading{7}{実際の測定で使う手順と，確認問題}
+\sub{有限時間で切ると，成分が周囲へ広がる}
+DFTは切り出したデータを繰り返すと考えます。周波数がビンに合わない波は，切り出し区間の両端をつなぐと一般に不連続になり，1つの正弦波の成分が多数のビンに広がります。これが\textbf{スペクトル漏れ}です。例えば $T=1$ sでは，50 Hzは格子上ですが，50.5 Hzは格子の間です。
+
+両端をなだらかに小さくする\textbf{窓関数}（Hann窓など）を掛けると，遠くのビンへの漏れを抑えられます。ただし，ピークの幅は広がり，振幅も変わります。窓を掛けた後は，4ページの式だけで振幅を決めず，窓に応じた補正が必要です。
+
+\sub{振動測定なら，この順番で進める}
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{調べる帯域と周波数の刻みを決める。}例えば200 Hzまで，刻み1 Hzを目標にする。
+\item \textbf{サンプリング条件を決める。}例えば $f_s=1000$ Hz，$T=1$ s，$N=1000$。A/D変換前のフィルタも用意する。
+\item \textbf{データを点検する。}センサの単位，等間隔かどうか，欠損，測定範囲を超えた波形のつぶれを確認する。変動分だけを調べるなら平均値を引く。
+\item \textbf{必要に応じて窓を掛け，FFTでDFTを求める。}ソフトの正規化を確認し，$F_l$ と $X_l=\Delta t F_l$ を区別する。
+\item \textbf{横軸と縦軸を換算する。}横軸は $l f_s/N$ [Hz]，縦軸は目的に合う振幅などにする。窓を使った場合はその影響も考慮する。
+\item \textbf{ピークを装置の動作と照らす。}例えば回転数3000 rpmは $3000/60=50$ Hz。50 Hzのピークは回転に関連する可能性がありますが，それだけで故障とは断定できません。
+\end{enumerate}
+\point{データの末尾に0を足す「ゼロ詰め」は，周波数軸の表示を細かくできます。しかし，実測時間が延びるわけではなく，近い2つの周波数を分離する能力そのものは増えません。}
+
+\sub{確認問題}
+\begin{enumerate}[label=(\arabic*)]
+\item $\Delta t=0.002$ s，$N=1000$ のとき，$f_s,T,\Delta f$ とナイキスト周波数を求めよ。60 Hzは何番目のビンか。
+\item 窓を掛けずに，ビンに一致する単一の正弦波を測った。$N=1000$，正の周波数のビン $l=120$ で $|F_{120}|=300$ Vなら，波の振幅はいくらか。
+\item $f_s=500$ Hzで，混入した400 Hzの $\cos$ 波を測ると，0〜250 Hzの範囲では何 Hzに見えるか。
+\end{enumerate}
+\sub{解答}
+\noindent (1) $f_s=500$ Hz，$T=2$ s，$\Delta f=0.5$ Hz，ナイキスト周波数は250 Hz。$l=60/0.5=120$。\\
+(2) $A=2|F_{120}|/N=2\times300/1000=0.6$ V。\\
+(3) $400-500=-100$ Hzに対応するので，片側では100 Hzに見えます。
+\end{document}

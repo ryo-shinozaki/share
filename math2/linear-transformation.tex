@@ -1,0 +1,314 @@
+\subsection{一次変換}
+
+ベクトル空間 $\mathbb{R}^n$ からベクトル空間 $\mathbb{R}^n$ への写像を
+考える。写像 $f\colon\mathbb{R}^n\to\mathbb{R}^n$ が次の二つの性質を
+満たすとき、$f$ を\textbf{一次変換}（線形写像）という。
+\begin{itemize}
+ \item 加法をしてから変換しても、変換してから加法をしても同じである：
+ \begin{equation}
+  f(\vect{v}+\vect{w})=f(\vect{v})+f(\vect{w}).
+ \end{equation}
+ \item スカラー倍してから変換しても、変換してからスカラー倍しても同じである：
+ \begin{equation}
+  f(a\vect{v})=a f(\vect{v}).
+ \end{equation}
+\end{itemize}
+
+\begin{example}
+変換
+\[
+ A=\begin{pmatrix}1&-1\\2&1\end{pmatrix},\qquad
+ \vect{v}=\begin{pmatrix}2\\1\end{pmatrix},\qquad
+ \vect{w}=\begin{pmatrix}-1\\1\end{pmatrix}
+\]
+について、加法とスカラー倍が保たれることを確かめる。
+\begin{align*}
+ A(\vect{v}+\vect{w})
+ &=\begin{pmatrix}1&-1\\2&1\end{pmatrix}
+   \left\{\begin{pmatrix}2\\1\end{pmatrix}
+   +\begin{pmatrix}-1\\1\end{pmatrix}\right\}
+ =\begin{pmatrix}1&-1\\2&1\end{pmatrix}
+  \begin{pmatrix}1\\2\end{pmatrix}
+ =\begin{pmatrix}-1\\4\end{pmatrix},\\
+ A\vect{v}+A\vect{w}
+ &=\begin{pmatrix}1&-1\\2&1\end{pmatrix}\begin{pmatrix}2\\1\end{pmatrix}
+  +\begin{pmatrix}1&-1\\2&1\end{pmatrix}\begin{pmatrix}-1\\1\end{pmatrix}\\
+ &=\begin{pmatrix}1\\5\end{pmatrix}+\begin{pmatrix}-2\\-1\end{pmatrix}
+ =\begin{pmatrix}-1\\4\end{pmatrix}.
+\end{align*}
+また、
+\begin{align*}
+ A(2\vect{v})
+ &=\begin{pmatrix}1&-1\\2&1\end{pmatrix}\begin{pmatrix}4\\2\end{pmatrix}
+ =\begin{pmatrix}2\\10\end{pmatrix},\\
+ 2A\vect{v}
+ &=2\begin{pmatrix}1&-1\\2&1\end{pmatrix}\begin{pmatrix}2\\1\end{pmatrix}
+ =2\begin{pmatrix}1\\5\end{pmatrix}
+ =\begin{pmatrix}2\\10\end{pmatrix}.
+\end{align*}
+\end{example}
+
+\subsubsection{直交変換}
+
+内積を保存する一次変換を\textbf{直交変換}という。すなわち、
+\begin{align}
+ (A\vect{v})\mathbin{\boldsymbol{\cdot}}(A\vect{w})
+ &=(A\vect{v})^{\mathsf T}(A\vect{w})\notag\\
+ &=\vect{v}^{\mathsf T}A^{\mathsf T}A\vect{w}
+ =\vect{v}^{\mathsf T}\vect{w}
+\end{align}
+を満たす変換である。したがって、直交変換の表現行列 $A$ は
+\begin{equation}
+ \boxed{A^{\mathsf T}A=I}
+\end{equation}
+を満たす。このような行列を\textbf{直交行列}という。
+
+直交変換について、次が成り立つ。
+\begin{itemize}
+ \item 逆行列は転置行列である：$A^{-1}=A^{\mathsf T}$。
+ \item 行列式は $\det A=\pm1$ である。実際、
+ \[
+  1=\det I=\det(A^{\mathsf T}A)
+   =(\det A^{\mathsf T})(\det A)=(\det A)^2.
+ \]
+\end{itemize}
+
+\begin{example}
+\begin{equation}
+ A=\begin{pmatrix}
+ \dfrac1{\sqrt2}&-\dfrac1{\sqrt2}\\[2mm]
+ \dfrac1{\sqrt2}& \dfrac1{\sqrt2}
+ \end{pmatrix}
+\end{equation}
+とする。このとき
+\[
+ \det A=\frac12-\left(-\frac12\right)=1,
+\]
+また
+\[
+ A^{\mathsf T}A
+ =\begin{pmatrix}
+ \dfrac1{\sqrt2}&\dfrac1{\sqrt2}\\[2mm]
+ -\dfrac1{\sqrt2}&\dfrac1{\sqrt2}
+ \end{pmatrix}
+ \begin{pmatrix}
+ \dfrac1{\sqrt2}&-\dfrac1{\sqrt2}\\[2mm]
+ \dfrac1{\sqrt2}&\dfrac1{\sqrt2}
+ \end{pmatrix}
+ =\begin{pmatrix}1&0\\0&1\end{pmatrix}
+\]
+であるから、$A$ は直交変換である。
+
+さらに
+\[
+ \vect{v}=\begin{pmatrix}2\\1\end{pmatrix},\qquad
+ \vect{w}=\begin{pmatrix}-1\\1\end{pmatrix}
+\]
+とすると、
+\[
+ \vect{v}\mathbin{\boldsymbol{\cdot}}\vect{w}
+ =\vect{v}^{\mathsf T}\vect{w}=-1,
+\]
+一方、
+\[
+ A\vect{v}=\begin{pmatrix}1/\sqrt2\\3/\sqrt2\end{pmatrix},\qquad
+ A\vect{w}=\begin{pmatrix}-2/\sqrt2\\0\end{pmatrix}
+\]
+なので、
+\[
+ (A\vect{v})\mathbin{\boldsymbol{\cdot}}(A\vect{w})=-1
+\]
+となり、内積が保存されている。
+\end{example}
+
+この $A$ はどのような変換であろうか。標準基底の像は
+\[
+ \unit{x}'=A\unit{x}
+ =\begin{pmatrix}1/\sqrt2\\1/\sqrt2\end{pmatrix},\qquad
+ \unit{y}'=A\unit{y}
+ =\begin{pmatrix}-1/\sqrt2\\1/\sqrt2\end{pmatrix}
+\]
+である。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=2.2]
+ \draw[->] (-1.25,0)--(1.45,0) node[right] {$x$};
+ \draw[->] (0,-.25)--(0,1.45) node[above] {$y$};
+ \draw[densely dashed,gray] (0,0) circle (1);
+ \draw[->,thick] (0,0)--(1,0) node[below right] {$\unit{x}$};
+ \draw[->,thick] (0,0)--(0,1) node[above right] {$\unit{y}$};
+ \draw[->,very thick,blue] (0,0)--({sqrt(2)/2},{sqrt(2)/2})
+   node[right] {$\unit{x}'$};
+ \draw[->,very thick,red] (0,0)--({-sqrt(2)/2},{sqrt(2)/2})
+   node[above left] {$\unit{y}'$};
+ \draw[->] (.38,0) arc[start angle=0,end angle=45,radius=.38]
+   node[midway,right] {$\frac{\pi}{4}$};
+ \draw[->] (0,.48) arc[start angle=90,end angle=135,radius=.48]
+   node[midway,above] {$\frac{\pi}{4}$};
+ \node[below left] at (0,0) {$O$};
+\end{tikzpicture}
+\caption{$\unit{x}$ と $\unit{y}$ をそれぞれ原点のまわりに
+$\pi/4$ だけ回転する変換}
+\end{figure}
+
+\subsubsection{2次元の回転}
+
+標準基底
+\[
+ \unit{x}=\begin{pmatrix}1\\0\end{pmatrix},\qquad
+ \unit{y}=\begin{pmatrix}0\\1\end{pmatrix}
+\]
+を、原点のまわりに反時計回りに角 $\theta$ だけ回転する。
+\[
+ \unit{x}'=\begin{pmatrix}\cos\theta\\\sin\theta\end{pmatrix},\qquad
+ \unit{y}'=\begin{pmatrix}-\sin\theta\\\cos\theta\end{pmatrix}.
+\]
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.8]
+ \def\ang{32}
+ \draw[->] (-1.35,0)--(1.65,0) node[right] {$x$};
+ \draw[->] (0,-.35)--(0,1.5) node[above] {$y$};
+ \draw[->,thick] (0,0)--(1.15,0) node[below right] {$\unit{x}$};
+ \draw[->,very thick,blue] (0,0)--(\ang:1.25) node[right] {$\unit{x}'$};
+ \draw[->,very thick,red] (0,0)--({90+\ang}:1.25) node[above left] {$\unit{y}'$};
+ \draw[->] (.46,0) arc[start angle=0,end angle=\ang,radius=.46]
+   node[midway,right] {$\theta$};
+ \draw[->] (0,.56) arc[start angle=90,end angle={90+\ang},radius=.56]
+   node[midway,above] {$\theta$};
+ \node[above right] at (0,.95) {$\unit{y}$};
+\end{tikzpicture}
+\caption{標準基底を反時計回りに角 $\theta$ だけ回転する}
+\end{figure}
+
+回転の一次変換を $R(\theta)$ とすると、
+\[
+ \begin{pmatrix}\cos\theta\\\sin\theta\end{pmatrix}
+ =R(\theta)\begin{pmatrix}1\\0\end{pmatrix},\qquad
+ \begin{pmatrix}-\sin\theta\\\cos\theta\end{pmatrix}
+ =R(\theta)\begin{pmatrix}0\\1\end{pmatrix}.
+\]
+これらをまとめると、
+\begin{equation}
+ \boxed{R(\theta)=
+ \begin{pmatrix}
+  \cos\theta&-\sin\theta\\
+  \sin\theta& \cos\theta
+ \end{pmatrix}}
+\end{equation}
+となる。
+
+次に、ベクトル $\vect{v}$ に角 $\alpha$ と角 $\beta$ の変換を順に
+作用させると、
+\[
+ \vect{v}''=R(\beta)\vect{v}'=R(\beta)R(\alpha)\vect{v}.
+\]
+図から、これは $\vect{v}$ に角 $\alpha+\beta$ の変換を作用させる
+ことと同じなので、
+\begin{equation}
+ \boxed{R(\alpha+\beta)=R(\beta)R(\alpha)}
+\end{equation}
+である。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.65]
+ \draw[->] (-.25,0)--(2.25,0);
+ \draw[->,thick] (0,0)--(18:1.65) node[right] {$\vect{v}$};
+ \draw[->,very thick,blue] (0,0)--(50:1.75) node[right] {$\vect{v}'$};
+ \draw[->,very thick,red] (0,0)--(80:1.85) node[above] {$\vect{v}''$};
+ \draw[->] (18:.7) arc[start angle=18,end angle=50,radius=.7]
+   node[midway,right] {$\alpha$};
+ \draw[->] (50:1.0) arc[start angle=50,end angle=80,radius=1]
+   node[midway,above right] {$\beta$};
+\end{tikzpicture}
+\caption{回転の合成}
+\end{figure}
+
+\paragraph{演習}
+$R(\alpha+\beta)=R(\alpha)R(\beta)$ から、三角関数の加法定理
+\begin{align*}
+ \cos(\alpha+\beta)&=\cos\alpha\cos\beta-\sin\alpha\sin\beta,\\
+ \sin(\alpha+\beta)&=\sin\alpha\cos\beta+\cos\alpha\sin\beta
+\end{align*}
+を求めよ。
+
+\subsubsection{基底の変換}
+
+たとえば、3次元の正規直交基底を
+\[
+ (\unit{1},\unit{2},\unit{3})
+ \longrightarrow(\unit{1}',\unit{2}',\unit{3}')
+\]
+と変換する。このとき、ベクトル $\vect{v}$ の成分はどのように
+変換されるだろうか。
+
+ベクトルそのものは基底を変換しても変化しないので、
+\begin{equation}
+ \vect{v}
+ =(\unit{1}\ \unit{2}\ \unit{3})
+  \begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix}
+ =(\unit{1}'\ \unit{2}'\ \unit{3}')
+  \begin{pmatrix}x_1'\\x_2'\\x_3'\end{pmatrix}
+\end{equation}
+である。ここで、基底の変換を $A$ とすると、
+\[
+ (\unit{1}'\ \unit{2}'\ \unit{3}')
+ =(\unit{1}\ \unit{2}\ \unit{3})A.
+\]
+したがって
+\[
+ (\unit{1}'\ \unit{2}'\ \unit{3}')
+ \begin{pmatrix}x_1'\\x_2'\\x_3'\end{pmatrix}
+ =(\unit{1}\ \unit{2}\ \unit{3})AA^{-1}
+ \begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix}
+\]
+となり、新しい基底でのベクトルの成分は
+\begin{equation}
+ \boxed{
+ \begin{pmatrix}x_1'\\x_2'\\x_3'\end{pmatrix}
+ =A^{-1}\begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix}}
+\end{equation}
+と変換される。
+
+\begin{example}[座標軸の反転]
+$y$ 軸を反転した座標系を考える。
+\[
+ (\unit{x}\ \unit{y})
+ =\begin{pmatrix}1&0\\0&1\end{pmatrix}
+ \longrightarrow
+ \begin{pmatrix}1&0\\0&-1\end{pmatrix}
+ =(\unit{x}'\ \unit{y}').
+\]
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth]
+ \begin{scope}[xshift=-3cm]
+  \draw[->] (0,0)--(1.6,0) node[right] {$x$};
+  \draw[->] (0,0)--(0,1.4) node[above] {$y$};
+ \end{scope}
+ \draw[->,thick] (-.8,.7)--(.8,.7) node[midway,above] {$y$軸を反転};
+ \begin{scope}[xshift=3cm]
+  \draw[->] (0,0)--(1.6,0) node[right] {$x'$};
+  \draw[->] (0,1.1)--(0,-1.4) node[below] {$y'$};
+ \end{scope}
+\end{tikzpicture}
+\caption{$y$ 軸を反転した座標系}
+\end{figure}
+
+基底の変換行列は
+\[
+ A=\begin{pmatrix}1&0\\0&-1\end{pmatrix}
+\]
+である。したがって、位置ベクトルの成分は
+\begin{equation}
+ \begin{pmatrix}x'\\y'\end{pmatrix}
+ =A^{-1}\begin{pmatrix}x\\y\end{pmatrix}
+ =\begin{pmatrix}1&0\\0&-1\end{pmatrix}
+  \begin{pmatrix}x\\y\end{pmatrix}
+\end{equation}
+と変換される。
+\end{example}

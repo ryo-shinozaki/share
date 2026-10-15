@@ -1,0 +1,51 @@
+# TeX / LaTeX の補助ファイル
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.synctex.gz(busy)
+*.dvi
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.spl
+*.run.xml
+
+# 参考文献・索引・用語集の生成ファイル
+*.bbl
+*.bcf
+*.blg
+*.idx
+*.ilg
+*.ind
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glg2
+*.glsdefs
+
+# 自動生成キャッシュ
+_minted*/
+*.pyg
+*.pygstyle
+
+# この作業で生成した検証用画像・中間PDF・抽出テキスト
+# 確認記録 (.md) と検算スクリプト (.py) は管理対象に残す
+/verification/*.png
+/verification/*.pdf
+/verification/generated.txt
+/verification/answers_text.txt
+/verification/answers_numerical_checks.txt
+
+# 原本と納品用PDFは管理対象に残すため、*.pdf は除外しない

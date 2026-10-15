@@ -1,0 +1,119 @@
+\subsection{Taylor展開と数値微分}
+
+\subsubsection{Taylor展開}
+
+$f$ が $x=a$ の近傍で十分な回数だけ微分可能であるとする。
+\[
+ f(x)=C_0+C_1(x-a)+C_2(x-a)^2+\cdots
+\]
+とおき、両辺を繰り返し微分して $x=a$ を代入すると
+$C_n=f^{(n)}(a)/n!$ を得る。したがって
+\begin{equation}
+ \boxed{f(x)=\sum_{n=0}^{\infty}
+ \frac{f^{(n)}(a)}{n!}(x-a)^n}
+\end{equation}
+を $a$ のまわりの\textbf{Taylor展開}という。有限次数で打ち切るときは
+\[
+ f(x)=\sum_{k=0}^{n}\frac{f^{(k)}(a)}{k!}(x-a)^k+R_n(x)
+\]
+と書き、$R_n$ を剰余項という。Taylorの定理によれば、適切な
+$\xi$ が $a$ と $x$ の間に存在して
+\[
+ R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-a)^{n+1}
+\]
+と表せる。
+
+$a=0$ の場合を\textbf{Maclaurin展開}という。代表例は
+\begin{align}
+ e^x&=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\cdots,\\
+ \sin x&=x-\frac{x^3}{3!}+\frac{x^5}{5!}-\cdots,\\
+ \cos x&=1-\frac{x^2}{2!}+\frac{x^4}{4!}-\cdots,\\
+ (1+x)^\alpha
+ &=1+\alpha x+\frac{\alpha(\alpha-1)}{2!}x^2+\cdots
+ \qquad(|x|<1)
+\end{align}
+である。たとえば
+\[
+ \sqrt{1+x}=1+\frac12x-\frac18x^2+O(x^3),
+\qquad
+ \frac1{1+x}=1-x+x^2+O(x^3).
+\]
+ここで $O(x^m)$ は、$x\to0$ のとき絶対値が定数倍の $|x|^m$
+以下で抑えられる項を表す。
+
+\paragraph{係数計算の例}
+$f(x)=\sin x$ では
+\[
+ f(0)=0,\quad f'(0)=1,\quad f''(0)=0,\quad
+ f^{(3)}(0)=-1,\quad f^{(4)}(0)=0
+\]
+なので、3次までなら
+\[
+ \sin x=x-\frac{x^3}{3!}+O(x^5).
+\]
+$f(x)=\sqrt{1+x}$ では
+\[
+ f(0)=1,\qquad f'(x)=\frac12(1+x)^{-1/2},\qquad
+ f''(x)=-\frac14(1+x)^{-3/2}
+\]
+より
+\[
+ f'(0)=\frac12,\qquad f''(0)=-\frac14,
+\]
+したがって
+\[
+ \sqrt{1+x}
+ =1+\frac12x+\frac{f''(0)}{2!}x^2+O(x^3)
+ =1+\frac12x-\frac18x^2+O(x^3)
+\]
+となる。
+
+\subsubsection{数値微分}
+
+関数値が離散的な点でしか得られない場合、導関数を差分で近似する。
+Taylor展開
+\begin{align*}
+ f(x+h)&=f(x)+f'(x)h+\frac12f''(x)h^2+O(h^3),\\
+ f(x-h)&=f(x)-f'(x)h+\frac12f''(x)h^2+O(h^3)
+\end{align*}
+から、前進差分と後退差分
+\begin{align}
+ f'(x)&=\frac{f(x+h)-f(x)}h+O(h),\\
+ f'(x)&=\frac{f(x)-f(x-h)}h+O(h)
+\end{align}
+を得る。両者を平均すると1次の誤差が打ち消され、
+\begin{equation}
+ \boxed{f'(x)=\frac{f(x+h)-f(x-h)}{2h}+O(h^2)}
+\end{equation}
+となる。これを\textbf{中心差分}という。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.1]
+ \draw[->] (-.4,0)--(5,0) node[right] {$x$};
+ \draw[->] (0,-.2)--(0,3.5) node[above] {$y$};
+ \draw[thick,domain=.4:4.5,samples=70,smooth]
+   plot(\x,{.18*(\x-1.6)^2+.55});
+ \foreach \x/\lab in {1.5/{x-h},2.5/x,3.5/{x+h}}
+  {\draw[dashed] (\x,0)--(\x,{.18*(\x-1.6)^2+.55});
+   \node[below] at (\x,0) {$\lab$};}
+ \draw[blue] (2.5,.45)--(4.5,1.8) node[right] {前進};
+ \draw[red] (.5,.45)--(2.5,.72) node[left] {後退};
+ \draw[green!60!black,thick] (1.1,.2)--(4,1.42) node[right] {中心};
+\end{tikzpicture}
+
+\small 前進差分・後退差分・中心差分による傾きの近似
+\end{center}
+
+2階微分は二つのTaylor展開を加えることで
+\begin{align*}
+ f(x+h)+f(x-h)
+ &=2f(x)+f''(x)h^2\\
+ &\quad+\frac1{12}f^{(4)}(x)h^4+O(h^6)
+\end{align*}
+となるため、
+\begin{equation}
+ \boxed{f''(x)=\frac{f(x+h)-2f(x)+f(x-h)}{h^2}+O(h^2)}
+\end{equation}
+と近似できる。$h$ を小さくすれば打切り誤差は減少するが、極端に
+小さくすると浮動小数点の丸め誤差や桁落ちが増えるため、実計算では
+両者の釣合いを考える必要がある。

@@ -1,0 +1,109 @@
+\section{ベータ関数とベータ分布}
+定義:
+\begin{equation}
+ B(x,y)=\int_0^1dt\,t^{x-1}(1-t)^{y-1}.
+\end{equation}
+
+\subsection{ガンマ関数との関係}
+ガンマ関数は、
+\begin{equation}
+ \Gamma(x)=\int_0^\infty dt\, t^{x-1}e^{-t}.
+\end{equation}
+次の式を考える：
+\begin{equation}
+ \Gamma(x)\Gamma(y)=\int_0^\infty ds\,s^{x-1}e^{-s}\int_0^\infty dt\, t^{y-1}e^{-t}.\label{eq:beta_func_product_gamma}
+\end{equation}
+ここで、$s=uv$, $t=u(1-v)$と座標変換する。$0\le s, t< +\infty$なので、これを満たす条件は$u\ge 0$かつ、$v\ge 0$かつ$(1-v)\ge 0$である。つまり、$0\le v \le 1$、$0\le u < \infty$である。ヤコビヤンは、
+\begin{equation}
+\renewcommand{\arraystretch}{2} % この行列だけの行間を広げる
+ \begin{vmatrix}
+  \dfrac{\partial s}{\partial u} & \dfrac{\partial s}{\partial v} \\
+  \dfrac{\partial t}{\partial u} & \dfrac{\partial t}{\partial v}
+ \end{vmatrix}
+\renewcommand{\arraystretch}{1} % デフォルトに戻す
+=
+\begin{vmatrix}
+ v & u\\
+1-v & -u
+\end{vmatrix}
+=|-uv-u+uv|=u.
+\end{equation}
+つまり、$ds\,dt=udu\,dv$である。
+
+結局、式\eqref{eq:beta_func_product_gamma}は、
+\begin{align*}
+ \Gamma(x)\Gamma(y)&=\int_0^\infty udu\int_0^1dv\,(uv)^{x-1}e^{\cancel{-uv}}u^{y-1}(1-v)^{y-1}e^{-u(1-\cancel{v})}\\
+&= \int_0^\infty du\int_0^1dv\, u^{x+y-1}e^{-u}v^{x-1}(1-v)^{y-1}\\
+&=\int_0^\infty du\, u^{x+y-1}e^{-u}\int_0^1dv\, v^{x-1}(1-v)^{y-1}\\
+&=\Gamma(x+y)B(x, y).
+\end{align*}
+したがって、
+\begin{equation}
+ B(x,y)=\dfrac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}.
+\end{equation}
+
+\subsection{ベータ関数の性質}
+\begin{align*}
+ B(x,y+1)&=\int_0^1dt\,t^{x-1}(1-t)^y\\
+&=\int_0^1d\left(\dfrac{t^x}{x}\right)\,(1-t)^y=\left[\dfrac{t^x}{x}(1-t)\right]_0^1-\int_0^1d(1-t)^y\,\dfrac{t^x}{x}\\
+&=\dfrac{y}{x}\int_0^1dt\,t^x(1-t)^{y-1}.
+\end{align*}
+従って、
+\begin{equation}
+ B(x,y+1)=\dfrac{y}{x}B(x+1,y).\label{eq:beta_function_eq1}
+\end{equation}
+
+式\eqref{eq:beta_function_eq1}から
+\begin{align*}
+ B(x+1,y)&=\dfrac{x}{y}B(x,y+1)=\dfrac{x}{y}\int_0^1dt\,t^{x-1}(1-t)^y\\
+&=\dfrac{x}{y}\int_0^1dt\,t^{x-1}(1-t)^{y-1}(1-t)\\
+&=\dfrac{x}{y}B(x,y)-\dfrac{x}{y}B(x+1,y).
+\end{align*}
+従って、
+\begin{equation}
+ B(x+1,y)=\dfrac{x}{x+y}B(x,y).\label{eq:beta_bunction_eq2}
+\end{equation}
+また、式\eqref{eq:beta_bunction_eq2}を式\eqref{eq:beta_function_eq1}へ代入して、
+\begin{equation}
+ B(x,y+1)=\dfrac{y}{x+y}B(x,y).
+\end{equation}
+
+\subsection{ベータ分布}
+ベータ分布は区間$[0,1]$に定義された連続分布で、「割合・確率・比率」の不確実性を表すのに適している。次の式で表される：
+\begin{equation}
+ f(x)=\dfrac{x^{p-1}(1-x)^{q-1}}{B(p,q)},\ \ 0\le x\le 1.
+\end{equation}
+確率変数$X$の実検地を$x$とする。確率変数$X$の期待値$E[X]$は、
+\begin{align*}
+ \ev{x}&=\int_0^1dx\,xf(x)=\dfrac{1}{B(p,q)}\int_0^1dx\,x^p(1-x)^{q-1}\\
+&=\dfrac{1}{B(p,q)}B(p+1,q).
+\end{align*}
+式\eqref{eq:beta_bunction_eq2}を代入して、
+\begin{equation}
+ E[X]=\ev{x}=\dfrac{1}{\cancel{B(p,q)}}\dfrac{p}{p+q}\cancel{B(p,q)}=\dfrac{p}{p+q}.\label{eq:beta_func_expect}
+\end{equation}
+分散$V[X]$は、
+\begin{equation}
+ V[X]=\ev{(x-\ev{x})^2}=\ev{x^2}-\ev{x}^2.\label{eq:beta_func_vari}
+\end{equation}
+第1項は、
+\begin{equation}
+ \ev{x^2}=\int_0^1dx\,x^2f(x)=\dfrac{1}{B(p,q)}\int_0^1dx\,x^{p+1}(1-x)-{q-1}=\dfrac{B(p+2,q)}{B(p,q)}.
+\end{equation}
+式\eqref{eq:beta_bunction_eq2}を代入すれば、
+\begin{equation*}
+ \ev{x^2}=\dfrac{1}{B(p,q)}\dfrac{p+1}{p+1+q}B(p+1,q)=\dfrac{1}{B(p,q)}\dfrac{p+1}{p+q+1}\dfrac{p}{p+q}B(p,q).\\
+\end{equation*}
+これを整理して、
+\begin{equation}
+ \ev{x^2}=\dfrac{p(p+1)}{(p+q)(p+q+1)}.
+\end{equation}
+これと式\eqref{eq:beta_func_expect}を式\eqref{eq:beta_func_vari}へ代入すると、
+\begin{equation}
+ \ev{(x-\ev{x})^2}=\dfrac{p(p+1)}{(p+q)(p+q+*1)}-\dfrac{p^2}{(p+q)^2}=\dfrac{p}{p+q}\left\{\dfrac{p+1}{p+q+1}-\dfrac{p}{p+q}\right\}.
+\end{equation}
+従って、分散$V[X]$は、
+\begin{equation}
+ \ev{x^2}=\dfrac{pq}{(p+q)^2{(p+q+1)}},
+\end{equation}
+である。

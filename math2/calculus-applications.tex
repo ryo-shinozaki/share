@@ -1,0 +1,172 @@
+\subsection{微分の応用}
+
+\subsubsection{最小二乗法}
+
+測定点 $(x_i,y_i)\ (i=1,\ldots,N)$ に直線 $y=ax+b$ を当てはめる。
+残差 $\varepsilon_i=y_i-(ax_i+b)$ の二乗和
+\[
+ E(a,b)=\sum_{i=1}^N\{y_i-(ax_i+b)\}^2
+\]
+を最小にする。停留条件 $E_a=E_b=0$ は
+\begin{align*}
+ \frac{\partial E}{\partial a}
+ &=-2\sum_{i=1}^Nx_i(y_i-ax_i-b)\\
+ &=2\left(a\sum x_i^2+b\sum x_i-\sum x_iy_i\right)=0,\\
+ \frac{\partial E}{\partial b}
+ &=-2\sum_{i=1}^N(y_i-ax_i-b)\\
+ &=2\left(a\sum x_i+bN-\sum y_i\right)=0.
+\end{align*}
+これらを整理すると
+\begin{equation}
+ \begin{pmatrix}
+  \sum x_i^2&\sum x_i\\ \sum x_i&N
+ \end{pmatrix}
+ \begin{pmatrix}a\\b\end{pmatrix}
+ =
+ \begin{pmatrix}\sum x_iy_i\\\sum y_i\end{pmatrix}
+\end{equation}
+となる。これを\textbf{正規方程式}という。分母が零でなければ
+\begin{align}
+ a&=\frac{N\sum x_iy_i-(\sum x_i)(\sum y_i)}
+ {N\sum x_i^2-(\sum x_i)^2},\\
+ b&=\frac{(\sum x_i^2)(\sum y_i)-(\sum x_i)(\sum x_iy_i)}
+ {N\sum x_i^2-(\sum x_i)^2}.
+\end{align}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.9]
+ \draw[->] (-.2,0)--(6.3,0) node[right] {$x$};
+ \draw[->] (0,-.2)--(0,4.5) node[above] {$y$};
+ \draw[thick,blue] (.3,.5)--(5.8,3.8) node[right] {$y=ax+b$};
+ \foreach \x/\y in {.7/.7,1.3/1.7,2/1.4,2.8/2.5,3.6/2.4,4.3/3.5,5.1/3.2}
+  {\fill (\x,\y) circle (1.5pt);\draw[dashed,red] (\x,\y)--(\x,{.6*\x+.32});}
+\end{tikzpicture}
+
+\small 測定点と回帰直線。破線は残差を表す
+\end{center}
+
+2次関数 $y=ax^2+bx+c$ の場合は
+\[
+ E(a,b,c)=\sum_{i=1}^N\{y_i-(ax_i^2+bx_i+c)\}^2
+\]
+の停留条件から
+\begin{equation}
+ \begin{pmatrix}
+ \sum x_i^4&\sum x_i^3&\sum x_i^2\\
+ \sum x_i^3&\sum x_i^2&\sum x_i\\
+ \sum x_i^2&\sum x_i&N
+ \end{pmatrix}
+ \begin{pmatrix}a\\b\\c\end{pmatrix}
+ =
+ \begin{pmatrix}\sum x_i^2y_i\\\sum x_iy_i\\\sum y_i\end{pmatrix}
+\end{equation}
+を得る。
+
+\subsubsection{画像の勾配とエッジ}
+
+濃淡画像を輝度関数 $\phi(x,y)$ とみなすと、$\nabla\phi$ は輝度が
+最も急に増加する方向を示す。したがって $\lVert\nabla\phi\rVert$ が
+大きい画素はエッジ候補であり、勾配方向は局所的なエッジの法線方向である。
+デジタル画像では中心差分
+\[
+ \phi_x(i,j)\simeq\frac{\phi(i+1,j)-\phi(i-1,j)}2,\qquad
+ \phi_y(i,j)\simeq\frac{\phi(i,j+1)-\phi(i,j-1)}2
+\]
+などで勾配を近似する。勾配方向の輝度プロファイルを $\psi(t)$ とすると、
+滑らかな段差では $|\psi'(t)|$ が極大となる位置、すなわち
+$\psi''(t)=0$ 付近をエッジ位置として細かく推定できる。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.8]
+ \draw (0,0) rectangle (4,3);
+ \fill[gray!25] (0,0)--(0,3)--(2.7,3)--(1.3,0)--cycle;
+ \draw[very thick] (1.3,0)--(2.7,3);
+ \coordinate (P) at (2,1.5);
+ \fill (P) circle (2pt) node[below right] {$P$};
+ \draw[->,blue,very thick] (P)--($(P)+(1.5,-.7)$)
+   node[right] {$\nabla\phi(P)$};
+ \begin{scope}[xshift=6cm]
+  \draw[->] (0,0)--(4.3,0) node[right] {$t$};
+  \draw[->] (0,0)--(0,3.2) node[above] {$\phi$};
+  \draw[thick,smooth] plot coordinates{(.2,.2)(1,.25)(1.6,.5)(2,1.5)
+     (2.4,2.5)(3,2.8)(4,2.85)};
+  \draw[dashed] (2,0)--(2,1.5);
+ \end{scope}
+\end{tikzpicture}
+
+\small 画像エッジと勾配方向の輝度プロファイル
+\end{center}
+
+\subsubsection{Lagrangeの未定乗数法}
+
+拘束条件 $g(x,y)=0$ のもとで $f(x,y)$ の極値を求める。正則な
+拘束曲線上の極値では等高線が接するため $\nabla f=\lambda\nabla g$
+となる。Lagrange関数
+\[
+ L(x,y,\lambda)=f(x,y)-\lambda g(x,y)
+\]
+を導入すれば、候補点は
+\begin{equation}
+ \boxed{L_x=L_y=L_\lambda=0}
+\end{equation}
+を解いて求められる。候補点が最大・最小のどちらかは、関数値の比較や
+拘束曲線上での増減により判定する。
+
+\begin{example}
+$g(x,y)=y+x^2-2=0$ のもとで $f(x,y)=y-2x$ の極値を求める。
+\[
+ L=y-2x-\lambda(y+x^2-2)
+\]
+の停留条件から $(x,y)=(-1,1)$、$f=3$ を得る。拘束条件を代入すると
+$f=2-x^2-2x=3-(x+1)^2$ なので、この点で最大値 $3$ をとる。
+一方、$|x|\to\infty$ で $f\to-\infty$ となるため、最小値は存在しない。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.05]
+ \draw[->] (-3.2,0)--(3.2,0) node[right] {$x$};
+ \draw[->] (0,-2.2)--(0,3.1) node[above] {$y$};
+ \draw[thick,domain=-2.1:2.1,samples=60,smooth]
+   plot(\x,{2-\x*\x}) node[right] {$y=2-x^2$};
+ \draw[blue,thick] (-2.4,-1.8)--(.8,4.6)
+   node[above right] {$y=2x+3$};
+ \fill (-1,1) circle (2pt) node[above left] {$(-1,1)$};
+ \draw[dashed] (-1,1)--(-1,0) node[below] {$-1$};
+\end{tikzpicture}
+
+\small 目的関数の等高線 $y-2x=3$ が拘束曲線に接する
+\end{center}
+\end{example}
+
+\begin{example}[楕円に内接する長方形]
+楕円 $x^2/a^2+y^2/b^2=1$ に内接する軸平行な長方形の面積は
+$S=4xy$ である。第1象限で
+\[
+ L=4xy-\lambda\left(\frac{x^2}{a^2}+\frac{y^2}{b^2}-1\right)
+\]
+とおく。停留条件は
+\begin{align*}
+ L_x&=4y-\frac{2\lambda x}{a^2}=0,\\
+ L_y&=4x-\frac{2\lambda y}{b^2}=0,\\
+ L_\lambda&=-\left(\frac{x^2}{a^2}+\frac{y^2}{b^2}-1\right)=0.
+\end{align*}
+最初の二式をそれぞれ $x,y$ 倍すると
+\[
+ 4xy=\frac{2\lambda x^2}{a^2}
+     =\frac{2\lambda y^2}{b^2}
+\]
+なので $x^2/a^2=y^2/b^2$ である。これと拘束条件から
+\[
+ x=\frac{a}{\sqrt2},\qquad y=\frac{b}{\sqrt2},\qquad
+ \boxed{S_{\max}=2ab}
+\]
+を得る。
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.05]
+ \draw[->] (-3,0)--(3.2,0) node[right] {$x$};
+ \draw[->] (0,-2)--(0,2.2) node[above] {$y$};
+ \draw[thick] (0,0) ellipse (2.7 and 1.7);
+ \draw[blue,thick] (-1.91,-1.2) rectangle (1.91,1.2);
+ \fill (1.91,1.2) circle (1.5pt) node[above right] {$(x,y)$};
+\end{tikzpicture}
+\end{center}
+\end{example}

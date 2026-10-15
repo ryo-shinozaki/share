@@ -1,0 +1,26 @@
+# TeX intermediate files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
+# Generated documents
+*.pdf
+
+# Editor and backup files
+*.bak
+*.swp
+*~

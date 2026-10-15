@@ -1,0 +1,85 @@
+% !TeX program = lualatex
+% コンパイル: lualatex -interaction=nonstopmode -halt-on-error keikaku_fan2.tex
+% keikaku.pdf の A4・1ページ、6項目の様式に合わせて作成。
+\documentclass[a4paper,10pt]{article}
+\usepackage{luatexja}
+\usepackage[haranoaji]{luatexja-preset}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage[margin=0mm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\newcommand{\entry}[2]{%
+  \node[anchor=north west,inner sep=0pt,text width=160mm,
+    font=\fontsize{9}{12}\selectfont] at (26,#1) {#2};}
+\newcommand{\head}[1]{{\fontsize{10}{14}\selectfont\bfseries #1}\par\vspace{1mm}}
+\begin{document}
+\null
+\begin{tikzpicture}[remember picture,overlay,x=1mm,y=-1mm]
+\begin{scope}[shift={(current page.north west)}]
+\node[anchor=north west,inner sep=0pt,font=\fontsize{10}{14}\selectfont]
+  at (24,20) {電子制御工学実験・4年後期テーマ「フーリエ解析」};
+\draw[line width=.65pt] (167,17) rectangle (187,37);
+\node[anchor=north,font=\fontsize{9}{12}\selectfont] at (177,19) {確認印};
+\node[font=\Large\bfseries] at (105,36) {実験計画書};
+\node[anchor=west,font=\fontsize{10}{14}\selectfont] at (122,45)
+  {Ec4\quad 番号\underline{\hspace{12mm}}\quad 氏名\underline{\hspace{25mm}}};
+\draw[line width=.6pt] (24,49) rectangle (190,278);
+\foreach \h in {68,112,137,218,250}
+  {\draw[line width=.6pt] (24,\h)--(190,\h);}
+
+\entry{51}{\head{1．研究テーマ名}
+3枚羽根の扇風機における風量設定（低・中・高）と音の周波数・大きさの関係}
+
+\entry{70}{\head{2．課題の設定}
+扇風機は生活や学習の場で使用する身近な機器であり、必要な風量を確保しつつ、
+音が気になりにくい設定を選びたいというニーズがある。風量を低・中・高に切り替えると、
+音の大きさや高さ、音色が変わると考えられるが、聴感だけではその違いを定量的に説明しにくい。
+そこで、同じ扇風機の音を同じ条件で録音し、フーリエ解析で比較する。
+また、羽根が3枚あるため、1回転の間に同じ位置を羽根が3回通過する。
+この周期性が音のスペクトルに現れるかを調べ、風量設定による音の変化を回転運動と関連付ける。}
+
+\entry{114}{\head{3．研究の目的}
+風量設定を低・中・高に変えたときの周波数スペクトルと録音波形の実効値を比較し、
+音の周波数成分と相対的な大きさの変化を明らかにする。
+さらに、3枚羽根による羽根通過周波数に対応するピークとその高調波を調べ、
+音から回転数を参考値として推定できる可能性と、その限界を検討する。}
+
+\entry{139}{\head{4．実験方法}
+\textbf{(1) 音声源}\par
+本人が用意する3枚羽根・3段階（低・中・高）切替式の扇風機1台。
+実験時にメーカー、型番、羽根径を記録する。首振りは停止し、設置位置・向きを固定する。
+録音には手動で入力ゲインを固定できる録音機器とマイクを用いる。
+回転計は使用せず、録音した音の周波数成分から各設定の特徴を調べる。\par\vspace{1mm}
+\textbf{(2) 実験の手順}\par
+① 静かな室内で、マイクを羽根中心と同じ高さ、中心から側方50\,cmの位置に固定する。
+直接の風を避け、距離・向き・ゲインを全条件で一定にする。自動音量調整・ノイズ抑制は無効にし、
+モノラル、44.1\,kHz、16\,bitのWAV形式で録音する。高設定でも音割れしないゲインにする。\par
+② 扇風機停止時の背景音を10秒録音する。低・中・高の各設定で運転し、
+切替後30秒待ってから10秒録音する。測定順を入れ替えて各設定3回、計9回測定する。
+ガードは外さず、録音中は扇風機やマイクの位置を変えない。\par
+③ 各録音の中央5秒から平均値を引き、実効値を求める。
+自作DFTプログラムで、4096点ずつハン窓を掛けて解析し、
+窓の補正と同一の正規化を行ったパワースペクトルを区間平均する
+（周波数刻み $44100/4096\simeq10.8$\,Hz）。\par
+④ 背景音と比較し、設定とともに移動するピーク、およびその整数倍付近のピークを抽出する。
+最大ピークが羽根通過周波数とは限らないため、複数のピークの関係を確認する。}
+
+\entry{220}{\head{5．評価対象と方法}
+① 横軸を周波数［Hz］、縦軸を相対パワー［dB］とし、3設定のスペクトルを重ねる。
+横軸を風量設定、縦軸を候補ピーク周波数・波形実効値とする図を作り、3回の平均と範囲を示す。
+実効値は校正した音圧ではなく、同じ録音条件での相対比較に用いる。\par
+② 3枚羽根では $f_{\mathrm{B}}=3n/60=n/20$［Hz］となる（$n$：回転数［rpm］）。
+ピークの再現性と整数倍の関係を調べ、羽根通過音と仮定した参考値 $n_{\mathrm{est}}=20f_{\mathrm{B}}$ を求める。
+回転数は実測しないため、羽根通過音との断定や推定精度の検証は行わない。}
+
+\entry{252}{\head{6．予想される結論}
+低→中→高で回転数が増加すれば、羽根通過周波数とその高調波は高周波側へ移り、
+実効値や広帯域の風切り音も増加すると予想する。
+風量設定に対する候補ピーク周波数・実効値の図では増加傾向が期待される。
+候補ピークが羽根通過音であれば、参考推定回転数も設定とともに増加すると予想する。
+ただしモータ音や背景音が強い場合は明瞭なピークが得られない可能性があり、
+3枚羽根に対応する成分が確認できる条件と、音による設定・回転数推定の限界を考察する。}
+\end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,240 @@
+\subsection{微分}
+
+\subsubsection{微分係数と導関数}
+
+関数 $y=f(x)$ において、$x$ を $\Delta x$ だけ変化させたときの
+$y$ の変化量は $\Delta y=f(x+\Delta x)-f(x)$ である。その比
+\[
+ \frac{\Delta y}{\Delta x}
+ =\frac{f(x+\Delta x)-f(x)}{\Delta x}
+\]
+を平均変化率という。$\Delta x\to0$ の極限が存在するとき、
+\begin{equation}
+ \boxed{f'(x)=\lim_{\Delta x\to0}
+ \frac{f(x+\Delta x)-f(x)}{\Delta x}}
+\end{equation}
+を $f$ の\textbf{導関数}という。$x=a$ における値 $f'(a)$ は
+微分係数であり、曲線 $y=f(x)$ の点 $(a,f(a))$ における接線の傾きである。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.15]
+ \draw[->] (-.4,0)--(5.2,0) node[right] {$x$};
+ \draw[->] (0,-.3)--(0,3.5) node[above] {$y$};
+ \draw[thick,domain=-.1:4.5,samples=80,smooth]
+   plot(\x,{.16*(\x-1.2)^2+.5});
+ \coordinate (P) at (2,{.16*(2-1.2)^2+.5});
+ \coordinate (Q) at (4,{.16*(4-1.2)^2+.5});
+ \fill (P) circle (1.5pt) node[below left] {$P$};
+ \fill (Q) circle (1.5pt) node[above left] {$Q$};
+ \draw[dashed] (P)--(2,0) node[below] {$x$};
+ \draw[dashed] (Q)--(4,0) node[below] {$x+\Delta x$};
+ \draw[blue,thick] ($(P)!-.35!(Q)$)--($(P)!1.25!(Q)$)
+   node[right] {割線};
+ \draw[red,thick] (.5,.22)--(3.8,1.07) node[right] {接線};
+\end{tikzpicture}
+
+\small 図\thefigure\quad 割線は $\Delta x\to0$ で接線に近づく
+\end{center}
+
+高階導関数は
+\[
+ f''(x)=\frac{d^2f}{dx^2},\qquad
+ f^{(n)}(x)=\frac{d^nf}{dx^n}
+\]
+と表す。また $x=a$ における値は
+$f^{(n)}(a)=\left.\dfrac{d^nf}{dx^n}\right|_{x=a}$ と書く。
+
+\subsubsection{定義から導く基本公式}
+
+\paragraph{べき関数}
+二項定理を用いると
+\begin{align*}
+ \frac{(x+\Delta x)^n-x^n}{\Delta x}
+ &=nx^{n-1}+\binom n2x^{n-2}\Delta x+\cdots+(\Delta x)^{n-1}.
+\end{align*}
+したがって
+\begin{equation}
+ \boxed{\frac{d}{dx}x^n=nx^{n-1}}
+\end{equation}
+である。
+
+\paragraph{指数関数}
+自然対数の底 $e$ は
+\[
+ \lim_{h\to0}\frac{e^h-1}{h}=1
+\]
+を満たすので、
+\[
+ \frac{d}{dx}e^x
+ =e^x\lim_{h\to0}\frac{e^h-1}{h}=e^x.
+\]
+
+\paragraph{三角関数}
+加法定理から
+\begin{align*}
+ \frac{\sin(x+h)-\sin x}{h}
+ &=\sin x\,\frac{\cos h-1}{h}
+   +\cos x\,\frac{\sin h}{h}.
+\end{align*}
+ここで
+\[
+ \lim_{h\to0}\frac{\sin h}{h}=1,\qquad
+ \lim_{h\to0}\frac{\cos h-1}{h}=0
+\]
+であるから、$(\sin x)'=\cos x$ を得る。
+
+最初の極限は単位円上の面積比較から示せる。$0<h<\pi/2$ について
+\[
+ \frac12\sin h<\frac12h<\frac12\tan h
+\]
+なので、$\cos h<\sin h/h<1$ である。$h\to0$ として挟み撃ちの
+原理を用いればよい。また、余弦の加法定理を用いると
+\begin{align*}
+ \frac{\cos(x+h)-\cos x}{h}
+ &=\cos x\,\frac{\cos h-1}{h}
+   -\sin x\,\frac{\sin h}{h}\\
+ &\longrightarrow-\sin x
+\end{align*}
+なので、$(\cos x)'=-\sin x$ である。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=2]
+ \coordinate (O) at (0,0);
+ \coordinate (A) at (1,0);
+ \coordinate (B) at ({cos(35)},{sin(35)});
+ \coordinate (T) at (1,{tan(35)});
+ \draw (O)--(A) arc[start angle=0,end angle=35,radius=1]--cycle;
+ \draw (A)--(T)--(O);
+ \draw[dashed] (B)--({cos(35)},0);
+ \draw[thick,blue] (O)--(B);
+ \draw[thick,red] (O)--(T);
+ \draw[->] (.35,0) arc[start angle=0,end angle=35,radius=.35]
+   node[midway,right] {$h$};
+ \node[below] at (A) {$A$};
+ \node[above left] at (B) {$P$};
+ \node[right] at (T) {$T$};
+ \node[left] at (O) {$O$};
+ \node[below] at (.5,0) {$1$};
+ \node[right] at ({cos(35)},{sin(35)/2}) {$\sin h$};
+ \node[right] at (1,{tan(35)/2}) {$\tan h$};
+\end{tikzpicture}
+
+\small 単位円上の三角形と扇形の面積比較
+\end{center}
+
+\paragraph{対数関数}
+$x>0$ とし、$h/x=1/n$ とおくと
+\begin{align*}
+ \frac{\log(x+h)-\log x}{h}
+ &=\frac1x\frac{x}{h}\log\left(1+\frac hx\right)\\
+ &=\frac1x\log\left(1+\frac1n\right)^n\longrightarrow\frac1x.
+\end{align*}
+したがって $(\log x)'=1/x$ である。ここでは $\log$ は自然対数を表す。
+
+\subsubsection{微分法則}
+
+微分可能な関数 $f,g$ について
+\begin{align}
+ (f+g)'&=f'+g',\\
+ (fg)'&=f'g+fg',\\
+ \left(\frac fg\right)'&=\frac{f'g-fg'}{g^2}\qquad(g\ne0)
+\end{align}
+が成り立つ。積の微分は、途中に $f(x)g(x+h)$ を挿入して
+\begin{align*}
+ \frac{f(x+h)g(x+h)-f(x)g(x)}h
+ &=\frac{f(x+h)-f(x)}h\,g(x+h)\\
+ &\quad+f(x)\frac{g(x+h)-g(x)}h
+\end{align*}
+と分け、$h\to0$ とすれば得られる。商の微分は
+$f/g=f\cdot g^{-1}$ とみなし、
+\[
+ (g^{-1})'=-\frac{g'}{g^2}
+\]
+を積の微分と組み合わせれば導ける。
+
+合成関数 $f(g(x))$ について、$\Delta g=g(x+\Delta x)-g(x)$ とおくと
+\[
+ \frac{f(g+\Delta g)-f(g)}{\Delta x}
+ =\frac{f(g+\Delta g)-f(g)}{\Delta g}\frac{\Delta g}{\Delta x}.
+\]
+極限を取ることにより、\textbf{連鎖律}
+\begin{equation}
+ \boxed{\frac{d}{dx}f(g(x))=f'(g(x))g'(x)}
+\end{equation}
+を得る。たとえば
+\[
+ \frac{d}{dx}\sqrt{1+x^2}=\frac{x}{\sqrt{1+x^2}},\qquad
+ \frac{d}{dx}\tan x=\frac1{\cos^2x}.
+\]
+
+\subsubsection{停留点・極値・変曲点}
+
+$f'(a)=0$ となる点 $x=a$ を\textbf{停留点}という。停留点の前後で
+$f'$ が正から負へ変われば極大、負から正へ変われば極小である。
+$f''(a)<0$ なら極大、$f''(a)>0$ なら極小と判定できるが、
+$f''(a)=0$ の場合は高階導関数や $f'$ の符号を調べる必要がある。
+また、曲線の凹凸が変わる点を\textbf{変曲点}という。$f''(a)=0$ は
+候補を与えるだけで、前後で $f''$ の符号が変わることを確認する。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.9]
+ \draw[->] (-4.6,0)--(4.8,0) node[right] {$x$};
+ \draw[->] (0,-2.2)--(0,2.8) node[above] {$y$};
+ \draw[thick,smooth] plot coordinates {
+ (-4,-1)(-3.2,1.4)(-2.5,2)(-1.8,1.2)(-.8,.3)
+ (0,-.2)(.8,-.25)(1.8,-.8)(2.7,-1.6)(3.5,-.8)(4.3,1.3)};
+ \foreach \x/\y/\lab in {-2.5/2/A,.8/-.25/C,2.7/-1.6/E}
+   {\fill (\x,\y) circle (1.7pt); \draw[dashed] (\x,\y)--(\x,0)
+    node[above right] {$x_{\lab}$};}
+ \foreach \x/\y/\lab in {-1.55/.92/B,1.75/-.76/D}
+   {\fill (\x,\y) circle (1.4pt); \draw[densely dashed,gray] (\x,\y)--(\x,0)
+    node[below] {$x_{\lab}$};}
+\end{tikzpicture}
+
+\small 極大点 $x_A$、極小点 $x_E$、停留点 $x_C$ と
+変曲点 $x_B,x_D$
+\end{center}
+
+\paragraph{演習}
+\[
+ f(x)=\frac15x^5-\frac34x^4+\frac13x^3+\frac32x^2-2x
+\]
+の増減、極値および変曲点を調べよ。
+
+\paragraph{解答}
+\begin{align*}
+ f'(x)
+ &=x^4-3x^3+x^2+3x-2\\
+ &=(x+1)(x-1)^2(x-2)
+\end{align*}
+である。よって
+\[
+\begin{array}{c|ccccccc}
+x&(-\infty,-1)&-1&(-1,1)&1&(1,2)&2&(2,\infty)\\ \hline
+f'(x)&+&0&-&0&-&0&+
+\end{array}
+\]
+となる。したがって $x=-1$ で極大、$x=2$ で極小となり、
+$x=1$ は停留点だが極値ではない。関数値は
+\[
+ f(-1)=\frac{133}{60},\qquad
+ f(1)=-\frac{43}{60},\qquad
+ f(2)=-\frac{14}{15}
+\]
+である。
+
+また
+\begin{align*}
+ f''(x)
+ &=4x^3-9x^2+2x+3\\
+ &=(x-1)(4x^2-5x-3)\\
+ &=4(x-1)
+ \left(x-\frac{5-\sqrt{73}}8\right)
+ \left(x-\frac{5+\sqrt{73}}8\right).
+\end{align*}
+各零点の前後で $f''$ の符号が変わるので、変曲点の $x$ 座標は
+\[
+ \boxed{x=\frac{5-\sqrt{73}}8,\quad1,\quad
+        \frac{5+\sqrt{73}}8}
+\]
+である。

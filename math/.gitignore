@@ -1,0 +1,72 @@
+# TeX/LaTeX: ignore auxiliary and build artifacts (scoped to math/)
+# Keep final PDFs tracked by default. Uncomment below to ignore outputs.
+*.pdf
+*.ps
+# *.eps
+
+# Core LaTeX aux files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fmt
+*.fot
+*.cb
+*.cb2
+
+# Latexmk / build metadata
+*.fdb_latexmk
+
+# BibTeX/Biber
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*.run.xml
+
+# Indexing
+*.idx
+*.ilg
+*.ind
+*.ist
+
+# Glossaries
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.xdy
+
+# Beamer
+*.nav
+*.snm
+*.vrb
+
+# SyncTeX
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+
+# Intermediate outputs
+*.dvi
+*.xdv
+*-converted-to.pdf
+*-eps-converted-to.pdf
+
+# Minted/Pygments
+_minted*
+*.pygtex
+
+# Texpad
+.texpadtmp/
+
+# Optional: AUCTeX auto-generated folder (may be too broad for some repos)
+# auto/
+

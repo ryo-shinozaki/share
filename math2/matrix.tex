@@ -1,0 +1,374 @@
+\subsection{行列}
+
+\subsubsection{行列の成分と基本演算}
+
+$m$ 行 $n$ 列の数の配列
+\begin{equation}
+ A=(a_{ij})=
+ \begin{pmatrix}
+  a_{11}&a_{12}&\cdots&a_{1n}\\
+  a_{21}&a_{22}&\cdots&a_{2n}\\
+  \vdots&\vdots&\ddots&\vdots\\
+  a_{m1}&a_{m2}&\cdots&a_{mn}
+ \end{pmatrix}
+\end{equation}
+を $m\times n$ 行列という。$a_{ij}$ の第1添字 $i$ は行、第2添字
+$j$ は列を表す。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth]
+ \matrix (A) [matrix of math nodes,left delimiter=(,right delimiter=),
+  row sep=7mm,column sep=10mm,nodes={minimum width=9mm}] {
+  a_{11}&a_{12}&a_{13}\\ a_{21}&a_{22}&a_{23}\\};
+ \node[draw=blue,rounded corners,fit=(A-1-1)(A-1-3),inner sep=3pt] (row) {};
+ \node[draw=red,rounded corners,fit=(A-1-1)(A-2-1),inner sep=3pt] (col) {};
+ \draw[->,blue] ($(row.east)+(8mm,5mm)$)--(row.east)
+   node[pos=0,above] {第1行};
+ \draw[->,red] ($(col.south)+(-8mm,-7mm)$)--(col.south)
+   node[pos=0,below] {第1列};
+\end{tikzpicture}
+\caption{行と列、および成分の添字}
+\end{figure}
+
+同じ型の行列どうしの和・差は成分ごとに計算する。たとえば
+\begin{equation}
+ \begin{pmatrix}1&-1&3\\4&-2&-1\end{pmatrix}
+ +\begin{pmatrix}3&-1&1\\2&3&6\end{pmatrix}
+ =\begin{pmatrix}4&-2&4\\6&1&5\end{pmatrix}.
+\end{equation}
+また、スカラー $k$ との積は全成分を $k$ 倍して
+\[
+ kA=(ka_{ij}),\qquad
+ 2\begin{pmatrix}2&3\\-1&4\end{pmatrix}
+ =\begin{pmatrix}4&6\\-2&8\end{pmatrix}
+\]
+とする。
+
+\subsubsection{行列の積}
+
+$A$ が $m\times n$ 行列、$B$ が $n\times p$ 行列なら、積 $AB$ は
+$m\times p$ 行列であり
+\begin{equation}
+ (AB)_{ij}=\sum_{k=1}^{n}a_{ik}b_{kj}
+\end{equation}
+と定義する。すなわち、$A$ の第 $i$ 行と $B$ の第 $j$ 列を
+成分ごとに掛け、その和を取る。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,every node/.style={font=\small}]
+ \matrix (A) [matrix of math nodes,left delimiter=(,right delimiter=),
+   row sep=5mm,column sep=7mm] {
+  1&-1&3\\4&-2&-1\\};
+ \node at ($(A.east)+(5mm,0)$) {$\times$};
+ \matrix (B) [matrix of math nodes,right=13mm of A,
+   left delimiter=(,right delimiter=),row sep=5mm,column sep=7mm] {
+  3&2\\-1&3\\1&6\\};
+ \node at ($(B.east)+(5mm,0)$) {$=$};
+ \matrix (C) [matrix of math nodes,right=13mm of B,
+   left delimiter=(,right delimiter=),row sep=5mm,column sep=9mm] {
+  |[draw=purple,fill=purple!8]|7&17\\13&-4\\};
+ \node[draw=blue,rounded corners,fit=(A-1-1)(A-1-3),inner sep=2pt] {};
+ \node[draw=red,rounded corners,fit=(B-1-1)(B-3-1),inner sep=2pt] {};
+ \draw[->,blue,bend left=18] (A-1-2.north)--(C-1-1.north)
+   node[midway,above] {行};
+ \draw[->,red,bend right=18] (B-2-1.south)--(C-1-1.south)
+   node[midway,below] {列};
+\end{tikzpicture}
+\[
+ \underbrace{1\cdot3+(-1)(-1)+3\cdot1}_{第1行と第1列}=7
+\]
+\caption{行列積の計算：行と列の内積が一つの成分になる}
+\end{figure}
+
+行列をベクトルに掛ける操作も同じ規則であり、線形変換を表す。
+\[
+ \vect{v}'=A\vect{v}
+ =\begin{pmatrix}2&3\\-1&4\end{pmatrix}
+  \begin{pmatrix}-1\\3\end{pmatrix}
+ =\begin{pmatrix}7\\13\end{pmatrix}.
+\]
+
+行列積には
+\begin{align}
+ (kA)B&=k(AB)=A(kB),&
+ A(BC)&=(AB)C,\\
+ (A+B)C&=AC+BC,&
+ C(A+B)&=CA+CB
+\end{align}
+が成り立つ。ただし一般には $AB\ne BA$ であり、交換法則は成り立たない。
+
+\subsubsection{単位行列}
+
+対角成分がすべて $1$、それ以外が $0$ の正方行列を単位行列という。
+\[
+ I_n=\begin{pmatrix}
+ 1&0&\cdots&0\\0&1&\ddots&\vdots\\
+ \vdots&\ddots&\ddots&0\\0&\cdots&0&1
+ \end{pmatrix},\qquad
+ AI_n=I_nA=A,\qquad I_n^k=I_n.
+\]
+単位行列は、数の掛け算における $1$ と同じ役割をもつ。
+
+\subsection{行列式}
+
+\subsubsection{2次・3次の行列式}
+
+正方行列 $A$ の行列式を $\det A$ または $|A|$ と書く。2次では
+\begin{equation}
+ \begin{vmatrix}a_{11}&a_{12}\\a_{21}&a_{22}\end{vmatrix}
+ =a_{11}a_{22}-a_{12}a_{21}.
+\end{equation}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth]
+ \matrix (M) [matrix of math nodes,row sep=8mm,column sep=12mm] {
+  a_{11}&a_{12}\\a_{21}&a_{22}\\};
+ \draw[->,very thick,blue] (M-1-1)--(M-2-2)
+   node[midway,right] {$+$};
+ \draw[->,very thick,red] (M-1-2)--(M-2-1)
+   node[midway,left] {$-$};
+ \draw ($(M.north west)+(-3mm,2mm)$)--($(M.south west)+(-3mm,-2mm)$);
+ \draw ($(M.north east)+(3mm,2mm)$)--($(M.south east)+(3mm,-2mm)$);
+\end{tikzpicture}
+\caption{2次行列式：右下がりを加え、左下がりを引く}
+\end{figure}
+
+3次では最初の2列を右側へ写して斜めの積を取る
+\textbf{サラスの方法}が使える。
+\begin{align}
+ \det A={}&a_{11}a_{22}a_{33}+a_{12}a_{23}a_{31}
+ +a_{13}a_{21}a_{32}\notag\\
+ &-a_{13}a_{22}a_{31}-a_{11}a_{23}a_{32}
+ -a_{12}a_{21}a_{33}.
+\end{align}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.5cm,y=1cm,>=Stealth]
+ % 元の3列
+ \node (m11) at (1,-1) {$a_{11}$};
+ \node (m12) at (2,-1) {$a_{12}$};
+ \node (m13) at (3,-1) {$a_{13}$};
+ \node (m21) at (1,-2) {$a_{21}$};
+ \node (m22) at (2,-2) {$a_{22}$};
+ \node (m23) at (3,-2) {$a_{23}$};
+ \node (m31) at (1,-3) {$a_{31}$};
+ \node (m32) at (2,-3) {$a_{32}$};
+ \node (m33) at (3,-3) {$a_{33}$};
+ % 右側へ複写した最初の2列
+ \node[blue!65!black] (m14) at (4,-1) {$a_{11}$};
+ \node[blue!65!black] (m15) at (5,-1) {$a_{12}$};
+ \node[blue!65!black] (m24) at (4,-2) {$a_{21}$};
+ \node[blue!65!black] (m25) at (5,-2) {$a_{22}$};
+ \node[blue!65!black] (m34) at (4,-3) {$a_{31}$};
+ \node[blue!65!black] (m35) at (5,-3) {$a_{32}$};
+ \draw[thick] (.55,-.55)--(.55,-3.45);
+ \draw[thick] (3.45,-.55)--(3.45,-3.45);
+ \draw[dashed,blue!65!black] (3.5,-.55)--(3.5,-3.45);
+ % 正の3項（右下がり）
+ \draw[blue,->,very thick,opacity=.75] ($(m11)+(-.25,.25)$)--($(m22)+(0,.25)$)--($(m33)+(.25,.25)$);
+ \draw[blue,->,very thick,opacity=.75] ($(m12)+(-.25,.25)$)--($(m23)+(0,.25)$)--($(m34)+(.25,.25)$);
+ \draw[blue,->,very thick,opacity=.75] ($(m13)+(-.25,.25)$)--($(m24)+(0,.25)$)--($(m35)+(.25,.25)$);
+ % 負の3項（右上がり）
+ \draw[red,->,very thick,opacity=.75] ($(m31)+(-.25,-.25)$)--($(m22)+(0,-.25)$)--($(m13)+(.25,-.25)$);
+ \draw[red,->,very thick,opacity=.75] ($(m32)+(-.25,-.25)$)--($(m23)+(0,-.25)$)--($(m14)+(.25,-.25)$);
+ \draw[red,->,very thick,opacity=.75] ($(m33)+(-.25,-.25)$)--($(m24)+(0,-.25)$)--($(m15)+(.25,-.25)$);
+ \node[blue,anchor=west] at (5.65,-1.35) {$+$：右下がり3項};
+ \node[red,anchor=west] at (5.65,-2.65) {$-$：右上がり3項};
+ \draw[decorate,decoration={brace,mirror,amplitude=5pt},blue!65!black]
+   (3.65,-3.5)--(5.35,-3.5)
+   node[midway,below=6pt] {最初の2列を複写};
+\end{tikzpicture}
+\caption{サラスの方法（3次行列式にのみ使用できる）}
+\end{figure}
+
+\subsubsection{小行列式・余因子と展開}
+
+$a_{ij}$ のある第 $i$ 行と第 $j$ 列を除いてできる行列の行列式を
+小行列式 $M_{ij}$、符号を付けた
+\begin{equation}
+ C_{ij}=(-1)^{i+j}M_{ij}
+\end{equation}
+を余因子という。任意の一つの行または列に沿って
+\begin{equation}
+ \det A=\sum_{j=1}^{n}a_{ij}C_{ij}
+       =\sum_{j=1}^{n}(-1)^{i+j}a_{ij}M_{ij}
+\end{equation}
+と展開できる。どの行・列を選んでも答えは同じである。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+ \matrix (A) [matrix of math nodes,left delimiter=(,right delimiter=),
+  row sep=7mm,column sep=9mm,nodes={minimum width=8mm}] {
+  a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\\};
+ \node[fill=red!14,fit=(A-2-1)(A-2-3),inner sep=1pt] {};
+ \node[fill=red!14,fit=(A-1-2)(A-3-2),inner sep=1pt] {};
+ \node[draw=blue,very thick,fit=(A-1-1)(A-1-3)(A-3-1)(A-3-3),
+   inner sep=2pt,label=right:{$M_{22}$ に残る4成分}] {};
+ \node[draw,circle,inner sep=2pt] at (A-2-2) {$a_{22}$};
+\end{tikzpicture}
+\caption{$M_{22}$：$a_{22}$ の行と列を除く}
+\end{figure}
+
+第1行で展開する3次の公式は
+\begin{align}
+ \det A={}&a_{11}\begin{vmatrix}a_{22}&a_{23}\\a_{32}&a_{33}\end{vmatrix}
+ -a_{12}\begin{vmatrix}a_{21}&a_{23}\\a_{31}&a_{33}\end{vmatrix}\notag\\
+ &+a_{13}\begin{vmatrix}a_{21}&a_{22}\\a_{31}&a_{32}\end{vmatrix}.
+\end{align}
+
+\subsubsection{行列式の性質}
+
+計算では次の性質が重要である。
+\begin{enumerate}
+ \item \textbf{どの行（または列）で余因子展開しても値は同じ。}
+
+ \item \textbf{転置しても値は変わらない。}
+
+  行と列を入れ替えた転置行列
+  \[
+   A=\begin{pmatrix}a_{11}&a_{12}\\a_{21}&a_{22}\end{pmatrix},
+   \qquad
+   A^{\mathsf T}=\begin{pmatrix}a_{11}&a_{21}\\a_{12}&a_{22}\end{pmatrix}
+  \]
+  について
+  \[
+   \det A=a_{11}a_{22}-a_{12}a_{21}
+   =\det A^{\mathsf T}
+  \]
+  である。
+
+ \item \textbf{一つの行（列）がすべて $0$ なら行列式は $0$。}
+
+  零の行に沿って余因子展開すると各項がすべて $0$ になる。たとえば
+  \[
+   \begin{vmatrix}
+    a_{11}&a_{12}&a_{13}\\
+    0&0&0\\
+    a_{31}&a_{32}&a_{33}
+   \end{vmatrix}=0.
+  \]
+
+ \item \textbf{二つの行（列）を交換すると符号が反転する。}
+
+  たとえば
+  \[
+   \begin{vmatrix}3&1\\-1&2\end{vmatrix}=7,\qquad
+   \begin{vmatrix}-1&2\\3&1\end{vmatrix}=-7.
+  \]
+  第1行と第2行を交換したため、絶対値は同じで符号だけが変わる。
+
+ \item \textbf{一つの行（列）を $k$ 倍すると行列式も $k$ 倍される。}
+
+  \[
+   \begin{vmatrix}3&1\\-k&2k\end{vmatrix}
+   =k\begin{vmatrix}3&1\\-1&2\end{vmatrix}=7k.
+  \]
+  第2行から共通因子 $k$ を行列式の外へ出した形である。
+
+ \item \textbf{二つの行（列）が比例すれば行列式は $0$。}
+
+  \[
+   \begin{vmatrix}3&1\\6&2\end{vmatrix}
+   =3\cdot2-1\cdot6=0.
+  \]
+  第2行は第1行の2倍なので、二つの行が同じ方向の情報しかもたない。
+
+ \item \textbf{ある行の定数倍を別の行に加えても値は変わらない。}
+
+  例として
+  \[
+   D=\begin{vmatrix}2&1&5\\3&-2&4\\8&1&7\end{vmatrix}
+  \]
+  で、$R_2\leftarrow R_2+2R_1$ および
+  $R_3\leftarrow R_3-R_1$ としても
+  \[
+   D=\begin{vmatrix}2&1&5\\7&0&14\\6&0&2\end{vmatrix}=70
+  \]
+  と値は変わらない。詳しい操作図を次に示す。
+\end{enumerate}
+
+\begin{example}[性質7：余因子展開と行操作]
+\[
+D=\begin{vmatrix}2&1&5\\3&-2&4\\8&1&7\end{vmatrix}.
+\]
+第1行で展開すると
+\[
+D=2(-14-4)-(21-32)+5(3+16)=70.
+\]
+同じ計算を行操作で行うと、次の注釈図のようになる。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \matrix (A) [matrix of math nodes,left delimiter=|,right delimiter=|,
+  row sep=5mm,column sep=7mm] {2&1&5\\3&-2&4\\8&1&7\\};
+ \matrix (B) [matrix of math nodes,right=27mm of A,left delimiter=|,
+  right delimiter=|,row sep=5mm,column sep=7mm] {2&1&5\\7&0&14\\6&0&2\\};
+ \draw[->] ($(A.east)+(3mm,0)$)--($(B.west)+(-3mm,0)$);
+ \draw[->,blue,bend left=20] (A-1-1.east)--(A-2-1.east)
+   node[midway,right] {$R_2\leftarrow R_2+2R_1$};
+ \draw[->,red,bend right=25] (A-1-1.west)--(A-3-1.west)
+   node[midway,left] {$R_3\leftarrow R_3-R_1$};
+ \node[draw=purple,rounded corners,fit=(B-1-2)(B-3-2),inner sep=2pt] {};
+\end{tikzpicture}
+\[
+D=-\begin{vmatrix}7&14\\6&2\end{vmatrix}
+=-(14-84)=70.
+\]
+\end{center}
+第2列に零を作ったので、その列で余因子展開すれば一つの項だけで済む。
+\end{example}
+
+\subsubsection{上三角化による計算}
+
+上三角行列では対角成分の積が行列式になる：
+\[
+\det\begin{pmatrix}
+a_{11}&*&\cdots&*\\0&a_{22}&\cdots&*\\
+\vdots&\ddots&\ddots&\vdots\\0&\cdots&0&a_{nn}
+\end{pmatrix}
+=\prod_{k=1}^{n}a_{kk}.
+\]
+したがって、行列式を変えない「他の行の定数倍を加える」操作で
+対角線より下を $0$ にすればよい。
+
+\begin{example}
+\begin{align}
+\begin{vmatrix}1&-1&2\\1&2&3\\0&1&2\end{vmatrix}
+&\xrightarrow{R_2\leftarrow R_2-R_1}
+\begin{vmatrix}1&-1&2\\0&3&1\\0&1&2\end{vmatrix}\notag\\
+&\xrightarrow{R_3\leftarrow R_3-\frac13R_2}
+\begin{vmatrix}1&-1&2\\0&3&1\\0&0&\frac53\end{vmatrix}
+=1\cdot3\cdot\frac53=5.
+\end{align}
+\end{example}
+
+\subsection{逆行列}
+
+\subsubsection{定義と公式}
+
+$AA^{-1}=A^{-1}A=I$ を満たす $A^{-1}$ を $A$ の逆行列という。
+逆行列が存在するための必要十分条件は $\det A\ne0$ である。2次では
+\begin{equation}
+A^{-1}=\frac1{\det A}
+\begin{pmatrix}a_{22}&-a_{12}\\-a_{21}&a_{11}\end{pmatrix},
+\qquad
+\det A=a_{11}a_{22}-a_{12}a_{21}.
+\end{equation}
+つまり、対角成分を交換し、非対角成分の符号を反転して行列式で割る。
+
+一般の $n$ 次正方行列では、余因子行列を転置した随伴行列を使って
+\begin{equation}
+A^{-1}=\frac1{\det A}\operatorname{adj}A
+=\frac1{\det A}
+\begin{pmatrix}
+C_{11}&C_{21}&\cdots&C_{n1}\\
+C_{12}&C_{22}&\cdots&C_{n2}\\
+\vdots&\vdots&\ddots&\vdots\\
+C_{1n}&C_{2n}&\cdots&C_{nn}
+\end{pmatrix}.
+\end{equation}
+余因子の行と列が入れ替わっていることに注意する。

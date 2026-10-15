@@ -1,0 +1,283 @@
+\subsection{固有値・固有ベクトル}
+
+固有値と固有ベクトルは、行列が表す一次変換の本質的な性質を示す
+指標である。
+
+\subsubsection{定義と求め方}
+
+$n$ 次正方行列 $A$ に対し、零ベクトルでないベクトル $\vect{v}$ と
+スカラー $\lambda$ が
+\begin{equation}
+ A\vect{v}=\lambda\vect{v},\qquad \vect{v}\ne\vect{0}
+\end{equation}
+を満たすとき、$\lambda$ を $A$ の\textbf{固有値}、
+$\vect{v}$ を固有値 $\lambda$ に属する $A$ の
+\textbf{固有ベクトル}という。固有ベクトルは、一次変換 $A$ によって
+向きが変わらず、$\lambda$ 倍されるベクトルである。
+
+上の式は
+\[
+ (A-\lambda I)\vect{v}=\vect{0}
+\]
+と書ける。この同次連立方程式が $\vect{v}\ne\vect{0}$ という
+非自明解をもつためには、係数行列 $A-\lambda I$ が正則であっては
+ならない。したがって
+\begin{equation}
+ \boxed{\det(A-\lambda I)=0}
+\end{equation}
+が必要である。この $\lambda$ の方程式を $A$ の
+\textbf{固有方程式}という。固有方程式を解いて固有値を求め、
+各固有値について $(A-\lambda I)\vect{v}=\vect{0}$ を解けば、
+固有ベクトルが得られる。
+
+\begin{example}[固有値と固有ベクトル]
+\[
+ A=\begin{pmatrix}2&1\\3&4\end{pmatrix}
+\]
+の固有値と固有ベクトルを求める。固有方程式は
+\begin{align*}
+ \det(A-\lambda I)
+ &=\begin{vmatrix}2-\lambda&1\\3&4-\lambda\end{vmatrix}\\
+ &=\lambda^2-6\lambda+5
+  =(\lambda-1)(\lambda-5)=0
+\end{align*}
+であるから、固有値は $\lambda=1,5$ である。
+
+$\lambda=1$ のとき、
+\[
+ (A-I)\vect{v}
+ =\begin{pmatrix}1&1\\3&3\end{pmatrix}
+  \begin{pmatrix}x\\y\end{pmatrix}
+ =\begin{pmatrix}0\\0\end{pmatrix}
+\]
+より $x+y=0$ なので、固有ベクトルは
+\[
+ \vect{v}=c\begin{pmatrix}1\\-1\end{pmatrix}\qquad(c\ne0)
+\]
+である。同様に、$\lambda=5$ のとき
+\[
+ (A-5I)\vect{v}
+ =\begin{pmatrix}-3&1\\3&-1\end{pmatrix}
+  \begin{pmatrix}x\\y\end{pmatrix}
+ =\begin{pmatrix}0\\0\end{pmatrix}
+\]
+より $y=3x$ なので、固有ベクトルは
+\[
+ \vect{v}=c\begin{pmatrix}1\\3\end{pmatrix}\qquad(c\ne0)
+\]
+である。
+\end{example}
+
+\paragraph{演習}
+\[
+ A=\begin{pmatrix}3&1\\1&3\end{pmatrix}
+\]
+の固有値と固有ベクトルを求めよ。
+
+\subsubsection{固有値・固有ベクトルの性質}
+
+\paragraph{異なる固有値に属する固有ベクトル}
+異なる固有値に属する固有ベクトルは線形独立である。
+実際、$\lambda_1\ne\lambda_2$ に属する固有ベクトルを
+$\vect{v}_1,\vect{v}_2$ とし、
+\[
+ x_1\vect{v}_1+x_2\vect{v}_2=\vect{0}
+\]
+とする。両辺に $A$ を作用させた式から、元の式を
+$\lambda_1$ 倍した式を引くと、
+\[
+ x_2(\lambda_2-\lambda_1)\vect{v}_2=\vect{0}
+\]
+となる。$\lambda_2-\lambda_1\ne0$ かつ $\vect{v}_2\ne\vect{0}$
+なので $x_2=0$ であり、元の式から $x_1=0$ も従う。
+よって $\vect{v}_1,\vect{v}_2$ は線形独立である。
+一般に、互いに異なる固有値に属する固有ベクトルの組は線形独立である。
+
+\paragraph{行列式とトレース}
+2次正方行列
+\[
+ A=\begin{pmatrix}a_{11}&a_{12}\\a_{21}&a_{22}\end{pmatrix}
+\]
+の固有値を $\lambda_1,\lambda_2$ とする。固有多項式は
+\begin{align*}
+ \det(A-\lambda I)
+ &=\lambda^2-(a_{11}+a_{22})\lambda
+   +(a_{11}a_{22}-a_{12}a_{21})\\
+ &=(\lambda-\lambda_1)(\lambda-\lambda_2)
+\end{align*}
+である。係数を比較すると
+\begin{equation}
+ \boxed{\det A=\lambda_1\lambda_2,\qquad
+        \operatorname{tr}A=\lambda_1+\lambda_2}
+\end{equation}
+を得る。一般の $n$ 次正方行列でも、重複度を込めて
+\[
+ \det A=\prod_{i=1}^n\lambda_i,\qquad
+ \operatorname{tr}A=\sum_{i=1}^n\lambda_i
+\]
+が成り立つ。
+
+\subsubsection{行列の対角化}
+
+$n$ 次正方行列 $A$ が線形独立な固有ベクトル
+$\vect{v}_1,\ldots,\vect{v}_n$ をもち、対応する固有値を
+$\lambda_1,\ldots,\lambda_n$ とする。固有ベクトルを列に並べた行列
+\[
+ P=(\vect{v}_1\ \vect{v}_2\ \cdots\ \vect{v}_n)
+\]
+は正則であり、
+\begin{align*}
+ AP
+ &=(A\vect{v}_1\ A\vect{v}_2\ \cdots\ A\vect{v}_n)\\
+ &=(\lambda_1\vect{v}_1\ \lambda_2\vect{v}_2\
+    \cdots\ \lambda_n\vect{v}_n)\\
+ &=P\begin{pmatrix}
+ \lambda_1&&0\\
+ &\ddots&\\
+ 0&&\lambda_n
+ \end{pmatrix}
+\end{align*}
+となる。したがって
+\begin{equation}
+ \boxed{D=P^{-1}AP
+ =\begin{pmatrix}
+ \lambda_1&&0\\
+ &\ddots&\\
+ 0&&\lambda_n
+ \end{pmatrix}}
+\end{equation}
+である。このように、正則行列 $P$ によって $P^{-1}AP$ を対角行列に
+することを、$A$ を\textbf{対角化する}という。なお、すべての行列が
+対角化できるわけではなく、$n$ 個の線形独立な固有ベクトルをもつことが
+対角化可能であるための必要十分条件である。
+
+対角化できる行列では $A=PDP^{-1}$ なので、
+\begin{equation}
+ \boxed{A^m=PD^mP^{-1}}
+\end{equation}
+となり、高いべきも容易に計算できる。
+
+\begin{example}[対角化による行列のべき]
+\[
+ A=\begin{pmatrix}2&1\\3&4\end{pmatrix}
+\]
+について、前の例で求めた固有ベクトルを用いると
+\[
+ P=\begin{pmatrix}1&1\\-1&3\end{pmatrix},\qquad
+ D=\begin{pmatrix}1&0\\0&5\end{pmatrix},\qquad
+ P^{-1}=\frac14\begin{pmatrix}3&-1\\1&1\end{pmatrix}.
+\]
+したがって、非負整数 $m$ に対して
+\begin{align}
+ A^m
+ &=P\begin{pmatrix}1&0\\0&5^m\end{pmatrix}P^{-1}\notag\\
+ &=\frac14
+ \begin{pmatrix}
+ 3+5^m&-1+5^m\\
+ -3+3\cdot5^m&1+3\cdot5^m
+ \end{pmatrix}.
+\end{align}
+\end{example}
+
+\subsubsection{対称行列の固有値・固有ベクトル}
+
+実対称行列 $A=A^{\mathsf T}$ の固有値はすべて実数であり、異なる
+固有値に属する固有ベクトルは互いに直交する。さらに、固有ベクトルを
+適切に選ぶことで正規直交基底を作ることができる。したがって、ある
+直交行列 $U$ を用いて
+\begin{equation}
+ \boxed{U^{\mathsf T}AU=D}
+\end{equation}
+と対角化できる。これは実対称行列の\textbf{スペクトル定理}である。
+
+\begin{example}[対称行列の直交対角化]
+\[
+ A=\begin{pmatrix}7&2\\2&4\end{pmatrix}
+\]
+の固有値は $\lambda_1=8,\lambda_2=3$ であり、対応する単位固有ベクトル
+として
+\[
+ \vect{u}_1=\frac1{\sqrt5}\begin{pmatrix}2\\1\end{pmatrix},
+ \qquad
+ \vect{u}_2=\frac1{\sqrt5}\begin{pmatrix}-1\\2\end{pmatrix}
+\]
+を選べる。これらは
+\[
+ \vect{u}_1\mathbin{\boldsymbol{\cdot}}\vect{u}_2=0,\qquad
+ \lVert\vect{u}_1\rVert=\lVert\vect{u}_2\rVert=1
+\]
+を満たす。よって
+\[
+ U=(\vect{u}_1\ \vect{u}_2)
+ =\frac1{\sqrt5}\begin{pmatrix}2&-1\\1&2\end{pmatrix}
+\]
+は直交行列であり、$U^{-1}=U^{\mathsf T}$ である。実際、
+\[
+ U^{\mathsf T}AU=\begin{pmatrix}8&0\\0&3\end{pmatrix}.
+\]
+\end{example}
+
+\subsubsection{2次曲線への応用}
+
+交差項を含む2次曲線
+\begin{equation}
+ 5x^2+2\sqrt3xy+7y^2=4
+\end{equation}
+を考える。$\vect{x}=(x,y)^{\mathsf T}$ とおくと、
+\[
+ \vect{x}^{\mathsf T}A\vect{x}=4,\qquad
+ A=\begin{pmatrix}5&\sqrt3\\\sqrt3&7\end{pmatrix}
+\]
+と表せる。$A$ の固有値は $4,8$ であり、対応する単位固有ベクトルを
+\[
+ \vect{u}_1=\frac12\begin{pmatrix}\sqrt3\\-1\end{pmatrix},
+ \qquad
+ \vect{u}_2=\frac12\begin{pmatrix}1\\\sqrt3\end{pmatrix}
+\]
+と選ぶと、
+\[
+ U=(\vect{u}_1\ \vect{u}_2)
+ =\frac12\begin{pmatrix}\sqrt3&1\\-1&\sqrt3\end{pmatrix},
+ \qquad
+ U^{\mathsf T}AU=\begin{pmatrix}4&0\\0&8\end{pmatrix}=D.
+\]
+$U$ は角 $-\pi/6$ の回転行列である。座標変換
+\[
+ \vect{x}=U\vect{x}',\qquad
+ \vect{x}'=\begin{pmatrix}x'\\y'\end{pmatrix}
+\]
+を行うと、
+\begin{align*}
+ \vect{x}^{\mathsf T}A\vect{x}
+ &=(U\vect{x}')^{\mathsf T}A(U\vect{x}')\\
+ &=\vect{x}'^{\mathsf T}U^{\mathsf T}AU\vect{x}'
+ =\vect{x}'^{\mathsf T}D\vect{x}'
+\end{align*}
+なので、曲線の方程式は
+\[
+ 4{x'}^2+8{y'}^2=4,
+ \qquad\text{すなわち}\qquad
+ \boxed{{x'}^2+\frac{{y'}^2}{(1/\sqrt2)^2}=1}
+\]
+となる。したがって、もとの曲線は主軸の方向が座標軸から
+$-\pi/6$ だけ回転した楕円である。
+
+\begin{center}
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.65]
+ \def\ang{-30}
+ \draw[->] (-1.45,0)--(1.55,0) node[right] {$x$};
+ \draw[->] (0,-1.15)--(0,1.25) node[above] {$y$};
+ \draw[->,blue] (0,0)--(\ang:1.35) node[below right] {$x'$};
+ \draw[->,blue] (0,0)--({90+\ang}:1.1) node[above right] {$y'$};
+ \draw[rotate=\ang,thick,red]
+   plot[domain=0:360,samples=100,smooth]
+   ({cos(\x)},{sin(\x)/sqrt(2)});
+ \draw[->] (.43,0) arc[start angle=0,end angle=\ang,radius=.43];
+ \node[right] at (.48,-.13) {$-\pi/6$};
+\end{tikzpicture}
+
+\smallskip
+\refstepcounter{figure}\small 図\thefigure\quad
+固有ベクトルの方向を主軸とする楕円
+\end{center}

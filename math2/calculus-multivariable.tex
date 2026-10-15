@@ -1,0 +1,119 @@
+\subsection{多変数関数の微分}
+
+\subsubsection{偏微分}
+
+2変数関数 $z=f(x,y)$ に対し、一方の変数を固定して他方だけを
+変化させた微分を\textbf{偏微分}という。
+\begin{align}
+ f_x(x,y)&=\lim_{h\to0}\frac{f(x+h,y)-f(x,y)}h,\\
+ f_y(x,y)&=\lim_{h\to0}\frac{f(x,y+h)-f(x,y)}h.
+\end{align}
+$f_x=\partial f/\partial x$ などと書く。高階偏導関数は
+\[
+ f_{xx}=\frac{\partial^2f}{\partial x^2},\quad
+ f_{xy}=\frac{\partial^2f}{\partial y\partial x},\quad
+ f_{yx}=\frac{\partial^2f}{\partial x\partial y}
+\]
+と表す。混合偏導関数が近傍で連続なら $f_{xy}=f_{yx}$ である。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,x={(.85cm,-.35cm)},y={(.85cm,.35cm)},z={(0cm,1cm)}]
+ \draw[->] (0,0,0)--(4,0,0) node[below] {$x$};
+ \draw[->] (0,0,0)--(0,4,0) node[right] {$y$};
+ \draw[->] (0,0,0)--(0,0,3.2) node[above] {$z$};
+ \foreach \i in {0,...,4}
+  {\draw[gray] plot[domain=0:4,samples=20] (\x,\i,{.08*(\x-2)^2+.08*(\i-2)^2+1});
+   \draw[gray] plot[domain=0:4,samples=20] (\i,\x,{.08*(\i-2)^2+.08*(\x-2)^2+1});}
+ \fill (2.8,2.3,1.06) circle (1.6pt);
+ \draw[blue,thick] (1.5,2.3,.95)--(4,2.3,1.35) node[right] {$x$ 方向};
+ \draw[red,thick] (2.8,1,.95)--(2.8,3.8,1.35) node[right] {$y$ 方向};
+\end{tikzpicture}
+
+\small 曲面の座標方向に沿った断面の傾きが偏導関数である
+\end{center}
+
+\begin{example}
+$f(x,y)=2x^2+3xy-y^2+4y^3$ なら
+\[
+ f_x=4x+3y,\qquad f_y=3x-2y+12y^2
+\]
+である。
+\end{example}
+
+\paragraph{演習}
+$f(x,y)=2e^{2x}\sin\sqrt{xy}$ の $f_x,f_y$ を求めよ。ただし $xy>0$
+とする。
+
+\paragraph{解答}
+$s=\sqrt{xy}$ とおくと
+\[
+ s_x=\frac{y}{2\sqrt{xy}},\qquad
+ s_y=\frac{x}{2\sqrt{xy}}.
+\]
+積の微分と連鎖律により
+\begin{align*}
+ f_x
+ &=4e^{2x}\sin s+2e^{2x}\cos s\,s_x\\
+ &=4e^{2x}\sin\sqrt{xy}
+   +e^{2x}\frac{y}{\sqrt{xy}}\cos\sqrt{xy},\\
+ f_y
+ &=2e^{2x}\cos s\,s_y\\
+ &=e^{2x}\frac{x}{\sqrt{xy}}\cos\sqrt{xy}.
+\end{align*}
+
+\subsubsection{全微分と連鎖律}
+
+$f(x,t)$ で $x=x(t)$ も $t$ に依存するとき、偏微分
+$\partial f/\partial t$ は $x$ を固定した変化率である。一方、
+合成関数 $f(x(t),t)$ の微分は
+\begin{equation}
+ \boxed{\frac{df}{dt}
+ =\frac{\partial f}{\partial t}
+ +\frac{\partial f}{\partial x}\frac{dx}{dt}}
+\end{equation}
+となる。一般に $z=f(x_1,\ldots,x_n)$ の全微分は
+\[
+ dz=\sum_{i=1}^n\frac{\partial f}{\partial x_i}\,dx_i
+\]
+である。
+
+\begin{example}
+$f(x,t)=at^2+btx,\ x(t)=\sin t$ とする。連鎖律により
+\[
+ \frac{df}{dt}=(2at+bx)+(bt)\cos t
+ =2at+b\sin t+bt\cos t.
+\]
+直接 $f(t)=at^2+bt\sin t$ を微分しても同じ結果を得る。
+\end{example}
+
+\subsubsection{勾配と方向微分}
+
+スカラー場 $f(x_1,\ldots,x_n)$ に対し
+\begin{equation}
+ \boxed{\nabla f
+ =\left(\frac{\partial f}{\partial x_1},\ldots,
+ \frac{\partial f}{\partial x_n}\right)^{\mathsf T}}
+\end{equation}
+を $f$ の\textbf{勾配}という。単位ベクトル $\vect{u}$ 方向の
+方向微分は
+\[
+ D_{\vect{u}}f=\nabla f\mathbin{\boldsymbol{\cdot}}\vect{u}
+ =\lVert\nabla f\rVert\cos\theta
+\]
+である。したがって $\nabla f$ は $f$ が最も急に増加する方向を向き、
+その大きさは最大変化率である。また等高線・等位面に直交する。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.1]
+ \draw[->] (-3.2,0)--(3.5,0) node[right] {$x$};
+ \draw[->] (0,-2.2)--(0,2.5) node[above] {$y$};
+ \foreach \r in {.7,1.2,1.8}{\draw[gray] (0,0) ellipse ({1.45*\r} and \r);}
+ \coordinate (P) at (1.45,1.04);
+ \fill (P) circle (1.7pt) node[below right] {$P$};
+ \draw[->,very thick,blue] (P)--($(P)+(1.1,1.6)$)
+   node[above] {$\nabla f(P)$};
+ \draw ($(P)+(-.8,.55)$)--($(P)+(.8,-.55)$);
+\end{tikzpicture}
+
+\small 勾配は等高線の法線方向を向く
+\end{center}

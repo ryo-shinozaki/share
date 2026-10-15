@@ -1,0 +1,100 @@
+\section{ガンマ関数}
+定義:
+\begin{equation}
+\Gamma(\alpha)\equiv\int_0^{\infty}dt\,t^{\alpha-1}e^{-t}.\label{eqgamma_function}
+\end{equation}
+\subsection{性質}
+\begin{align}
+ \Gamma(\alpha +1) &= \int_0^{\infty}dt\,t^{\alpha}e^{-t}=\int_0^{\infty}d(-e^{-t})t^\alpha,\\
+&= \left[-t^\alpha e^{-t}\right]_0^{\infty}-\int_0^{\infty}dt\, \alpha t^{\alpha-1},
+\end{align}
+の第1項の$t\rightarrow\infty$では、$e^{-t}$は$t^\alpha$に比べ急速に近づくので、第1項は0である。従って、
+\begin{equation}
+ \Gamma(\alpha +1) =\alpha\Gamma(\alpha).
+\end{equation}
+また、
+\begin{equation}
+ \Gamma(1)=\int_0^{\infty}dt\, e^{-t}=\left[-e^{-t}\right]_0^\infty=1,
+\end{equation}
+だから、$\alpha$が整数$n$のとき、
+\begin{equation}
+ \Gamma(n+1)=n\Gamma(n)=n(n-1)\Gamma(n-1)=n(n-1)\cdots 1\Gamma(1)=n!.
+\end{equation}
+したがって、
+\begin{equation}
+ \Gamma(n+1)=n!.
+\end{equation}
+
+\subsection{スターリングの公式}
+式\eqref{eqgamma_function}において、$t=e^x$とおく。$t\rightarrow(0,\infty)$のとき、$x\rightarrow(-\infty, \infty)$である。また、$dt=e^xdx$だから、式\eqref{eqgamma_function}は、
+\begin{equation}
+ \Gamma(\alpha)=\int_{-\infty}^\infty e^xdx\, e^{x(\alpha-1)}e^{-e^x}=\int_{-\infty}^\infty dx\, e^{x\alpha-e^x}.\label{eq:gamma_function2}
+\end{equation}
+被積分関数の指数部を、
+\begin{equation}
+ f(x)=x\alpha-e^x,
+\end{equation}
+とおき、この増減を調べる。
+\begin{equation}
+ \dfrac{df}{dx}=\alpha-e^x,
+\end{equation}
+から、から停留点は$x=\log\alpha$。
+\begin{equation}
+ \dfrac{d^2f}{dx^2}=-e^x<0,
+\end{equation}
+なので、停留点で極大である。停留点における被積分関数の値は、
+\begin{equation}
+ e^{f(\log\alpha)}=e^{\alpha\log\alpha -\alpha}=\left(\dfrac{\alpha}{e}\right)^\alpha,
+\end{equation}
+である。
+
+つぎに$\alpha\gg 1$のとき、式\eqref{eq:gamma_function2}の被積分関数、
+\begin{equation}
+e^{f(x)}=e^{\alpha x}e^{-e^x}, 
+\end{equation}
+がどう振る舞うか調べる。$x\rightarrow -\infty$のとき、$e^{-e^x}=1$だが、$e^{\alpha x}$のために急速に$e^{f(x)}\rightarrow 0$である。また、$x\rightarrow +\infty$のとき、$\alpha x\ll e^x$だから$f(x)\sim -e^x$である。従って、$e^{f(x)}$は、$e^{-e^x}$のおかげで急速に$e^{f(x)}\rightarrow 0$である。
+以上を表にまとめると、
+\begin{equation*}
+ \begin{matrix}
+  x & -\infty & \log\alpha & +\infty \\
+  f^\prime & + & 0 & - \\
+  f(x) & -\infty & \alpha\log\alpha -\alpha & -\infty \\
+  e^{f(x)} & 0 & (\alpha / e)^\alpha & 0
+ \end{matrix}
+\end{equation*}
+となる。以上のことから、$e^{f(x)}$が値を持つのは、停留点の$\log\alpha$近傍のみである。
+
+そこで、$\log\alpha$近傍で$f(x)$をテーラー展開すると
+\begin{align}
+ f(x)&=\sum_{n=0}^\infty\dfrac{f^{(n)}(\log\alpha)}{n!}(x-\log\alpha)^n,\\
+&=(\alpha\log\alpha-\alpha)+f^\prime(\log\alpha)(x-\log\alpha)-\dfrac{\alpha}{2!}(x-\log\alpha)^2+\cdots,
+\end{align}
+である。$f^\prime(\log\alpha)=0$だから、
+\begin{equation}
+ e^{f(x)}\sim\left(\dfrac{\alpha}{e}\right)^\alpha e^{\frac{\alpha}{2}(x-\log\alpha)^2},
+\end{equation}
+なので、式\eqref{eq:gamma_function2}は、
+\begin{equation}
+ \Gamma(\alpha)\simeq \int_{-\infty}^{\infty}dx\,\left(\dfrac{\alpha}{e}\right)^\alpha e^{-\frac{\alpha}{2}(x-\log\alpha)^2},
+\end{equation}
+と書ける。積分区間を考慮すると$x-\log\alpha$を改めて$x$としても結果は同様であるから、
+\begin{equation}
+ \Gamma(\alpha)\simeq\int_{-\infty}^{\infty}dx\,\left(\dfrac{\alpha}{e}\right)^\alpha e^{-\frac{\alpha}{2}x^2},\label{eq:gamma_func_sim}
+\end{equation}
+とする。ここで次のように積分変数を変換する、
+\begin{equation}
+ t=\sqrt{\dfrac{\alpha}{2}}x,\ dx=\sqrt{\dfrac{2}{\alpha}}dt.
+\end{equation}
+式\eqref{eq:gamma_func_sim}は、ガウス積分を使って、
+\begin{equation}
+ \Gamma(\alpha)\simeq\left(\dfrac{\alpha}{e}\right)^\alpha\sqrt{\dfrac{2}{\alpha}}\int_{-\infty}^{+\infty}dt\, e^{-t^2}=\left(\dfrac{\alpha}{e}\right)^\alpha\sqrt{\dfrac{2\pi}{\alpha}}.
+\end{equation}
+$\Gamma(\alpha +1)=\alpha\Gamma(\alpha)$を使って、
+\begin{equation}
+ \Gamma(\alpha +1)\simeq \alpha\left(\dfrac{\alpha}{e}\right)^\alpha\sqrt{\dfrac{2\pi}{\alpha}}=\sqrt{2\pi\alpha}\left(\dfrac{\alpha}{e}\right)^\alpha.
+\end{equation}
+$\alpha$が整数$n$ならば、スターリングの公式、
+\begin{equation}
+ \Gamma(n+1)=n!\simeq n^ne^{-n}\sqrt{2\pi n},
+\end{equation}
+を得る。
